@@ -21,7 +21,7 @@
     </x-slot>
 
     <div class="py-6 md:py-12">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-gradient-to-br from-blue-50 to-white overflow-hidden shadow-xl sm:rounded-2xl border border-blue-100">
                 <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6 md:p-8">
                     <div class="flex items-center">

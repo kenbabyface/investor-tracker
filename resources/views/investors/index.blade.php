@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="space-y-2">
+        <div class="space-y-2 px-4 sm:px-0">
             <nav class="text-sm">
                 <ol class="list-none p-0 inline-flex flex-wrap">
                     <li class="flex items-center">
@@ -10,12 +10,12 @@
                     <li class="flex items-center text-gray-500">Investors</li>
                 </ol>
             </nav>
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     {{ __('Investors') }}
                 </h2>
-                <a href="{{ route('investors.create') }}" class="w-full sm:w-auto text-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('investors.create') }}" class="w-full sm:w-auto text-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2.5 px-4 sm:px-6 rounded-lg shadow-md transition flex items-center justify-center text-sm sm:text-base">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
                     Add New Investor
@@ -25,78 +25,81 @@
     </x-slot>
 
     <div class="py-6 md:py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
             @if(session('success'))
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg mb-4 shadow-sm flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                     </svg>
-                    {{ session('success') }}
+                    <span class="text-sm">{{ session('success') }}</span>
                 </div>
             @endif
 
             <!-- Mobile Cards View -->
-            <div class="block md:hidden space-y-4">
+            <div class="block md:hidden space-y-3">
                 @forelse($investors as $investor)
-                    <div class="bg-white rounded-xl shadow-sm border border-blue-100 p-4 hover:shadow-md transition">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-lg text-gray-900">{{ $investor->name }}</h3>
-                                <p class="text-sm text-gray-600">{{ $investor->email }}</p>
+                    <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-4 hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-3 gap-2">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-base text-gray-900 truncate">{{ $investor->name }}</h3>
+                                <p class="text-sm text-gray-600 truncate">{{ $investor->email }}</p>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <span class="px-3 py-1 text-xs font-semibold rounded-full 
-                                    @if($investor->status == 'active') bg-green-100 text-green-800
-                                    @elseif($investor->status == 'pending') bg-yellow-100 text-yellow-800
-                                    @else bg-red-100 text-red-800 @endif">
-                                    {{ ucfirst($investor->status) }}
-                                </span>
-                            </div>
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded-full whitespace-nowrap flex-shrink-0
+                                @if($investor->status == 'active') bg-green-100 text-green-800
+                                @elseif($investor->status == 'pending') bg-yellow-100 text-yellow-800
+                                @else bg-red-100 text-red-800 @endif">
+                                {{ ucfirst($investor->status) }}
+                            </span>
                         </div>
                         
-                        <div class="space-y-2 mb-3">
+                        <div class="space-y-1.5 mb-3 text-sm">
                             @if($investor->company)
-                                <p class="text-sm text-gray-600"><span class="font-medium">Company:</span> {{ $investor->company }}</p>
+                                <p class="text-gray-600 truncate">
+                                    <span class="font-medium">Company:</span> {{ $investor->company }}
+                                </p>
                             @endif
-                            <p class="text-sm text-gray-900"><span class="font-medium">Investment:</span> <span class="text-green-600 font-semibold">${{ number_format($investor->investment_amount, 2) }}</span></p>
+                            <p class="text-gray-900">
+                                <span class="font-medium">Investment:</span> 
+                                <span class="text-green-600 font-semibold">${{ number_format($investor->investment_amount, 2) }}</span>
+                            </p>
                         </div>
 
-                        <div class="flex gap-2 pt-3 border-t border-gray-200">
-                            <a href="{{ route('investors.show', $investor) }}" class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 px-3 rounded-lg flex items-center justify-center transition">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="grid grid-cols-3 gap-2 pt-3 border-t border-gray-200">
+                            <a href="{{ route('investors.show', $investor) }}" class="text-center bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 px-2 rounded-lg flex flex-col items-center justify-center transition">
+                                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                 </svg>
-                                View
+                                <span>View</span>
                             </a>
-                            <a href="{{ route('investors.edit', $investor) }}" class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 px-3 rounded-lg flex items-center justify-center transition">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="{{ route('investors.edit', $investor) }}" class="text-center bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2 px-2 rounded-lg flex flex-col items-center justify-center transition">
+                                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
-                                Edit
+                                <span>Edit</span>
                             </a>
-                            <form action="{{ route('investors.destroy', $investor) }}" method="POST" class="flex-1">
+                            <form action="{{ route('investors.destroy', $investor) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white text-sm py-2 px-3 rounded-lg flex items-center justify-center transition" 
+                                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white text-xs py-2 px-2 rounded-lg flex flex-col items-center justify-center transition" 
                                     onclick="return confirm('Are you sure?')">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                     </svg>
-                                    Delete
+                                    <span>Delete</span>
                                 </button>
                             </form>
                         </div>
                     </div>
                 @empty
-                    <div class="bg-white rounded-xl shadow-sm border border-blue-100 p-8 text-center">
+                    <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-6 text-center">
                         <div class="bg-blue-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
                         </div>
-                        <p class="text-gray-500 mb-4">No investors found. Add your first investor!</p>
-                        <a href="{{ route('investors.create') }}" class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-6 rounded-lg transition">
+                        <p class="text-gray-500 mb-4 text-sm">No investors found. Add your first investor!</p>
+                        <a href="{{ route('investors.create') }}" class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg transition text-sm">
                             Add Investor
                         </a>
                     </div>
