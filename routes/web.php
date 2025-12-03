@@ -13,12 +13,18 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    
+    // Read-only profile
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    
+    // Edit profile page
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    // Investor routes
+
     Route::resource('investors', InvestorController::class);
 });
+
 
 require __DIR__.'/auth.php';
