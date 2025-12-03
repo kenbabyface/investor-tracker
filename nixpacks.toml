@@ -6,8 +6,6 @@ cmds = [
     'composer install --no-dev --optimize-autoloader',
     'npm ci',
     'npm run build',
-    'mkdir -p database',
-    'touch database/database.sqlite',
     'php artisan migrate --force'
 ]
 
