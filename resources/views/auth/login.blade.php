@@ -1,15 +1,15 @@
 <x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 p-6 relative overflow-hidden">
+    <div class="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 overflow-hidden">
         <!-- Animated Background Elements -->
-        <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
             <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
         </div>
 
-        <div class="w-full max-w-md relative z-10">
+        <div class="w-full max-w-md px-6 relative z-10">
             <!-- Card -->
-            <div class="bg-white/95 backdrop-blur-xl shadow-2xl rounded-3xl p-8 md:p-10 border border-blue-100">
+            <div class="bg-white/95 backdrop-blur-xl shadow-2xl rounded-3xl p-8 border border-blue-100">
                 
                 <!-- Logo/Icon -->
                 <div class="flex justify-center mb-6">
@@ -21,15 +21,15 @@
                 </div>
 
                 <!-- Title -->
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome Back!</h2>
-                    <p class="text-gray-600">Sign in to your Investor Tracker account</p>
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome Back!</h2>
+                    <p class="text-gray-600 text-sm">Sign in to your Investor Tracker account</p>
                 </div>
 
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                <form method="POST" action="{{ route('login') }}" class="space-y-5">
                     @csrf
 
                     <!-- Email Address -->
@@ -79,7 +79,7 @@
                     </div>
 
                     <!-- Login Button -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition duration-200 flex items-center justify-center">
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition duration-200 flex items-center justify-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                         </svg>
@@ -88,8 +88,8 @@
                 </form>
 
                 <!-- Register Link -->
-                <div class="mt-8 pt-6 border-t border-gray-200">
-                    <p class="text-center text-gray-600">
+                <div class="mt-6 pt-5 border-t border-gray-200">
+                    <p class="text-center text-gray-600 text-sm">
                         Don't have an account?
                         <a href="{{ route('register') }}" class="font-semibold text-blue-600 hover:text-blue-800 transition">
                             Create Account
@@ -98,7 +98,7 @@
                 </div>
 
                 <!-- Footer Info -->
-                <div class="mt-6 text-center">
+                <div class="mt-4 text-center">
                     <p class="text-xs text-gray-500">
                         Protected by industry-standard encryption
                     </p>
@@ -106,27 +106,53 @@
             </div>
 
             <!-- Bottom Text -->
-            <p class="text-center text-white/80 text-sm mt-6">
+            <p class="text-center text-white/80 text-sm mt-4">
                 © 2024 Investor Tracker. All rights reserved.
             </p>
         </div>
     </div>
 
     <style>
+        /* Prevent scrolling on the page */
+        body, html {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+        }
+
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
             66% { transform: translate(-20px, 20px) scale(0.9); }
             100% { transform: translate(0px, 0px) scale(1); }
         }
+        
         .animate-blob {
             animation: blob 7s infinite;
         }
+        
         .animation-delay-2000 {
             animation-delay: 2s;
         }
+        
         .animation-delay-4000 {
             animation-delay: 4s;
+        }
+
+        /* Responsive adjustments */
+        @media (max-height: 700px) {
+            .max-w-md {
+                max-width: 28rem;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .p-8 {
+                padding: 1.5rem;
+            }
+            .mb-6:first-of-type {
+                margin-bottom: 1rem;
+            }
         }
     </style>
 </x-guest-layout>
