@@ -164,16 +164,6 @@
                     @if($investors->hasPages())
                         <div class="mt-6 border-t border-gray-200 pt-6">
                             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                                <!-- Showing entries info -->
-                                <div class="text-sm text-gray-700 order-2 sm:order-1">
-                                    Showing 
-                                    <span class="font-semibold text-gray-900">{{ $investors->firstItem() }}</span>
-                                    to 
-                                    <span class="font-semibold text-gray-900">{{ $investors->lastItem() }}</span>
-                                    of 
-                                    <span class="font-semibold text-gray-900">{{ $investors->total() }}</span>
-                                    investors
-                                </div>
                                 
                                 <!-- Pagination links -->
                                 <div class="order-1 sm:order-2">

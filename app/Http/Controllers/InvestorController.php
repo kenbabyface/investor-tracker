@@ -9,7 +9,7 @@ class InvestorController extends Controller
 {
     public function index()
     {
-        $investors = Investor::latest()->paginate(2);
+        $investors = Investor::latest()->paginate(8);
         return view('investors.index', compact('investors'));
     }
 
