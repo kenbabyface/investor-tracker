@@ -1,4 +1,4 @@
-<x-app-layout :title="'Investors - Twintiamiyu Investor Tracker'">
+<x-app-layout>
     <x-slot name="header">
         <div class="space-y-2 px-4 sm:px-0">
             <nav class="text-sm">
@@ -35,6 +35,141 @@
                 </div>
             @endif
 
+            <!-- Search and Filter Section -->
+            <div class="bg-white rounded-xl shadow-md border border-blue-100 p-4 sm:p-6 mb-6">
+                <form method="GET" action="{{ route('investors.index') }}" class="space-y-4">
+                    <!-- Search Bar -->
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="flex-1">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                                <input type="text" 
+                                       name="search" 
+                                       value="{{ request('search') }}"
+                                       placeholder="Search by name, email, or company..." 
+                                       class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md transition flex items-center justify-center text-sm">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            Search
+                        </button>
+                    </div>
+
+                    <!-- Toggle Filters Button (Mobile Only) -->
+                    <button type="button" 
+                            onclick="toggleFilters()" 
+                            class="lg:hidden w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 text-gray-700 font-semibold py-2.5 px-4 rounded-lg transition text-sm border border-gray-300">
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                            </svg>
+                            Advanced Filters
+                            @if(request()->hasAny(['status', 'min_investment', 'max_investment', 'sort']))
+                                <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">
+                                    Active
+                                </span>
+                            @endif
+                        </span>
+                        <svg id="filter-arrow" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Filters Row (Collapsible on Mobile) -->
+                    <div id="filters-section" class="hidden lg:block space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <!-- Status Filter -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select name="status" class="block w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                    <option value="">All Status</option>
+                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                            </div>
+
+                            <!-- Min Investment Filter -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Min Investment</label>
+                                <input type="number" 
+                                       name="min_investment" 
+                                       value="{{ request('min_investment') }}"
+                                       placeholder="0.00" 
+                                       step="0.01"
+                                       class="block w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            </div>
+
+                            <!-- Max Investment Filter -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Max Investment</label>
+                                <input type="number" 
+                                       name="max_investment" 
+                                       value="{{ request('max_investment') }}"
+                                       placeholder="0.00" 
+                                       step="0.01"
+                                       class="block w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            </div>
+
+                            <!-- Sort By -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                                <select name="sort" class="block w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                    <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest First</option>
+                                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name (A-Z)</option>
+                                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name (Z-A)</option>
+                                    <option value="amount_high" {{ request('sort') == 'amount_high' ? 'selected' : '' }}>Investment (High-Low)</option>
+                                    <option value="amount_low" {{ request('sort') == 'amount_low' ? 'selected' : '' }}>Investment (Low-High)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-2 pt-2">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center justify-center text-sm">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                                </svg>
+                                Apply Filters
+                            </button>
+                            <a href="{{ route('investors.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition flex items-center justify-center text-sm">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                Clear All
+                            </a>
+                            @if(request()->hasAny(['search', 'status', 'min_investment', 'max_investment', 'sort']))
+                                <div class="text-sm text-gray-600 flex items-center justify-center sm:ml-auto">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Filters active
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results Count -->
+            @if($investors->total() > 0)
+                <div class="mb-4 text-sm text-gray-600">
+                    <span class="font-semibold text-gray-900">{{ $investors->total() }}</span> 
+                    {{ $investors->total() == 1 ? 'investor' : 'investors' }} found
+                    @if(request()->hasAny(['search', 'status', 'min_investment', 'max_investment']))
+                        <span class="text-blue-600">with active filters</span>
+                    @endif
+                </div>
+            @endif
+
             <!-- Responsive Table -->
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-xl border border-blue-100">
                 <div class="p-4 sm:p-6 text-gray-900">
@@ -66,9 +201,7 @@
                                                 </div>
                                                 <div class="ml-2 sm:ml-4">
                                                     <div class="text-xs sm:text-sm font-semibold text-gray-900">{{ $investor->name }}</div>
-                                                    <!-- Show email on mobile only -->
                                                     <div class="text-xs text-gray-500 sm:hidden">{{ $investor->email }}</div>
-                                                    <!-- Show status on mobile/tablet -->
                                                     <div class="lg:hidden mt-1">
                                                         <span class="px-2 py-0.5 inline-flex text-xs leading-4 font-bold rounded-full 
                                                             @if($investor->status == 'active') bg-green-100 text-green-800
@@ -88,7 +221,6 @@
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4">
                                             <div class="text-xs sm:text-sm font-bold text-green-600">${{ number_format($investor->investment_amount, 2) }}</div>
-                                            <!-- Show company on mobile -->
                                             <div class="text-xs text-gray-500 md:hidden mt-0.5">{{ $investor->company ?? 'N/A' }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
@@ -143,16 +275,28 @@
                                         <td colspan="7" class="px-6 py-12 text-center">
                                             <div class="bg-blue-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                                                 <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                                 </svg>
                                             </div>
-                                            <p class="text-gray-500 mb-4 text-base sm:text-lg">No investors found. Add your first investor!</p>
-                                            <a href="{{ route('investors.create') }}" class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition shadow-md text-sm sm:text-base">
-                                                <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                                </svg>
-                                                Add Investor
-                                            </a>
+                                            <p class="text-gray-500 mb-4 text-base sm:text-lg">
+                                                @if(request()->hasAny(['search', 'status', 'min_investment', 'max_investment']))
+                                                    No investors found matching your filters.
+                                                @else
+                                                    No investors found. Add your first investor!
+                                                @endif
+                                            </p>
+                                            @if(request()->hasAny(['search', 'status', 'min_investment', 'max_investment']))
+                                                <a href="{{ route('investors.index') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition text-sm">
+                                                    Clear Filters
+                                                </a>
+                                            @else
+                                                <a href="{{ route('investors.create') }}" class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition shadow-md text-sm sm:text-base">
+                                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                    </svg>
+                                                    Add Investor
+                                                </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforelse
@@ -164,59 +308,18 @@
                     @if($investors->hasPages())
                         <div class="mt-6 border-t border-gray-200 pt-6">
                             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <div class="text-sm text-gray-700 order-2 sm:order-1">
+                                    Showing 
+                                    <span class="font-semibold text-gray-900">{{ $investors->firstItem() }}</span>
+                                    to 
+                                    <span class="font-semibold text-gray-900">{{ $investors->lastItem() }}</span>
+                                    of 
+                                    <span class="font-semibold text-gray-900">{{ $investors->total() }}</span>
+                                    investors
+                                </div>
                                 
-                                <!-- Pagination links -->
                                 <div class="order-1 sm:order-2">
-                                    <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-center">
-                                        <div class="flex items-center space-x-1">
-                                            {{-- Previous Page Link --}}
-                                            @if ($investors->onFirstPage())
-                                                <span class="relative inline-flex items-center px-2 sm:px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed rounded-lg">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                                    </svg>
-                                                    <span class="hidden sm:inline ml-1">Prev</span>
-                                                </span>
-                                            @else
-                                                <a href="{{ $investors->previousPageUrl() }}" rel="prev" class="relative inline-flex items-center px-2 sm:px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                                    </svg>
-                                                    <span class="hidden sm:inline ml-1">Prev</span>
-                                                </a>
-                                            @endif
-
-                                            {{-- Page Numbers --}}
-                                            @foreach ($investors->getUrlRange(1, $investors->lastPage()) as $page => $url)
-                                                @if ($page == $investors->currentPage())
-                                                    <span class="relative inline-flex items-center px-3 sm:px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 border border-blue-600 rounded-lg shadow-sm">
-                                                        {{ $page }}
-                                                    </span>
-                                                @else
-                                                    <a href="{{ $url }}" class="relative hidden sm:inline-flex items-center px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition">
-                                                        {{ $page }}
-                                                    </a>
-                                                @endif
-                                            @endforeach
-
-                                            {{-- Next Page Link --}}
-                                            @if ($investors->hasMorePages())
-                                                <a href="{{ $investors->nextPageUrl() }}" rel="next" class="relative inline-flex items-center px-2 sm:px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition">
-                                                    <span class="hidden sm:inline mr-1">Next</span>
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </a>
-                                            @else
-                                                <span class="relative inline-flex items-center px-2 sm:px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed rounded-lg">
-                                                    <span class="hidden sm:inline mr-1">Next</span>
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </nav>
+                                    {{ $investors->appends(request()->query())->links() }}
                                 </div>
                             </div>
                         </div>
@@ -227,29 +330,48 @@
     </div>
 
     <script>
+        // Toggle filters section on mobile
+        function toggleFilters() {
+            const filtersSection = document.getElementById('filters-section');
+            const filterArrow = document.getElementById('filter-arrow');
+            
+            filtersSection.classList.toggle('hidden');
+            filterArrow.classList.toggle('rotate-180');
+        }
+
+        // Auto-expand filters if any filter is active (except search and sort)
+        document.addEventListener('DOMContentLoaded', function() {
+            const hasActiveFilters = {{ request()->hasAny(['status', 'min_investment', 'max_investment']) ? 'true' : 'false' }};
+            
+            if (hasActiveFilters && window.innerWidth < 1024) {
+                const filtersSection = document.getElementById('filters-section');
+                const filterArrow = document.getElementById('filter-arrow');
+                if (filtersSection && filterArrow) {
+                    filtersSection.classList.remove('hidden');
+                    filterArrow.classList.add('rotate-180');
+                }
+            }
+        });
+
         function toggleDropdown(id) {
             event.stopPropagation();
             const dropdown = document.getElementById('dropdown-menu-' + id);
             const allDropdowns = document.querySelectorAll('[id^="dropdown-menu-"]');
             
-            // Close all other dropdowns
             allDropdowns.forEach(d => {
                 if (d.id !== 'dropdown-menu-' + id) {
                     d.classList.add('hidden');
                 }
             });
             
-            // Toggle current dropdown
             dropdown.classList.toggle('hidden');
         }
 
-        // Close dropdown when clicking outside
         window.addEventListener('click', function(event) {
             const allDropdowns = document.querySelectorAll('[id^="dropdown-menu-"]');
             allDropdowns.forEach(d => d.classList.add('hidden'));
         });
 
-        // Prevent dropdown from closing when clicking inside it
         document.addEventListener('DOMContentLoaded', function() {
             const dropdowns = document.querySelectorAll('[id^="dropdown-menu-"]');
             dropdowns.forEach(dropdown => {
