@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout :title="'Login - Twintiamiyu Investor Tracker'">
     <div class="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 overflow-hidden">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
