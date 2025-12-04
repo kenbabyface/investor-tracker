@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout :title="'Add New Investor - Twintiamiyu Investor Tracker'">
     <x-slot name="header">
         <div class="space-y-2">
             <nav class="text-sm">
