@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6 md:py-12">
-        <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Welcome Message -->
             <div class="mb-6 sm:mb-8">
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Welcome back, {{ Auth::user()->name }}! 👋</h1>
@@ -144,6 +144,19 @@
                 </div>
             </div>
 
+            <!-- Investment Trends Chart -->
+            @if($totalInvestors > 0)
+                <div class="bg-white overflow-hidden shadow-xl rounded-xl border border-blue-100 p-5 sm:p-6 mb-6 sm:mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Investment Trends</h3>
+                        <span class="text-sm text-gray-500">Last 6 Months</span>
+                    </div>
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="investmentTrendsChart"></canvas>
+                    </div>
+                </div>
+            @endif
+
             <!-- Quick Actions -->
             <div class="bg-white overflow-hidden shadow-xl rounded-xl border border-blue-100 p-5 sm:p-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
@@ -189,4 +202,107 @@
             @endif
         </div>
     </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Investment Trends Chart Script -->
+    @if($totalInvestors > 0)
+    <script>
+        // Investment Trends Chart
+        const investmentCtx = document.getElementById('investmentTrendsChart');
+        
+        const investmentData = {
+            labels: @json($chartLabels),
+            datasets: [{
+                label: 'Investment Amount ($)',
+                data: @json($chartData),
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: 'rgb(59, 130, 246)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        };
+
+        const investmentConfig = {
+            type: 'line',
+            data: investmentData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14,
+                                weight: '600'
+                            },
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += '$' + context.parsed.y.toLocaleString();
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            },
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(investmentCtx, investmentConfig);
+    </script>
+    @endif
 </x-app-layout>
