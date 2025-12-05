@@ -71,7 +71,7 @@ class InvestorController extends Controller
             'email' => 'required|email|unique:investors',
             'phone' => 'nullable|string|max:20',
             'company' => 'nullable|string|max:255',
-            'investment_amount' => 'required|numeric|min:0',
+            'investment_amount' => 'nullable|numeric|min:0',
             'status' => 'required|in:pending,active,inactive',
             'notes' => 'nullable|string',
         ]);
