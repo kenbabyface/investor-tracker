@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvestorController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvestmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,6 +24,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('investors', InvestorController::class);
+
+     // Investments
+    Route::get('/investments', [InvestmentController::class, 'index'])->name('investments.index');
+    Route::get('/investments/create', [InvestmentController::class, 'create'])->name('investments.create');
+    Route::post('/investments', [InvestmentController::class, 'store'])->name('investments.store');
+    Route::get('/investments/{investment}', [InvestmentController::class, 'show'])->name('investments.show');
+    Route::post('/investments/{investment}/mark-paid', [InvestmentController::class, 'markAsPaid'])->name('investments.markAsPaid');
+    Route::delete('/investments/{investment}', [InvestmentController::class, 'destroy'])->name('investments.destroy');
+    
+    // Investment History
+    Route::get('/investments-history', [InvestmentController::class, 'history'])->name('investments.history');
 });
 
 
