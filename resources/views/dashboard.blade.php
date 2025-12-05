@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6 md:py-12">
-        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Welcome Message -->
             <div class="mb-6 sm:mb-8">
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Welcome back, {{ Auth::user()->name }}! 👋</h1>
@@ -144,15 +144,53 @@
                 </div>
             </div>
 
-            <!-- Investment Trends Chart -->
+            <!-- Charts Section -->
             @if($totalInvestors > 0)
-                <div class="bg-white overflow-hidden shadow-xl rounded-xl border border-blue-100 p-5 sm:p-6 mb-6 sm:mb-8">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Investment Trends</h3>
-                        <span class="text-sm text-gray-500">Last 6 Months</span>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 sm:mb-8">
+                    <!-- Investment Trends Chart (2/3 width on desktop) -->
+                    <div class="lg:col-span-2 bg-white overflow-hidden shadow-xl rounded-xl border border-blue-100 p-5 sm:p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Investment Trends</h3>
+                            <span class="text-sm text-gray-500">Last 6 Months</span>
+                        </div>
+                        <div class="relative" style="height: 300px;">
+                            <canvas id="investmentTrendsChart"></canvas>
+                        </div>
                     </div>
-                    <div class="relative" style="height: 300px;">
-                        <canvas id="investmentTrendsChart"></canvas>
+
+                    <!-- Status Distribution Chart (1/3 width on desktop) -->
+                    <div class="bg-white overflow-hidden shadow-xl rounded-xl border border-blue-100 p-5 sm:p-6">
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Status Distribution</h3>
+                            <p class="text-sm text-gray-500">Investor breakdown</p>
+                        </div>
+                        <div class="relative flex items-center justify-center" style="height: 250px;">
+                            <canvas id="statusDistributionChart"></canvas>
+                        </div>
+                        <!-- Legend -->
+                        <div class="mt-4 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-emerald-500 mr-2"></div>
+                                    <span class="text-sm text-gray-700">Active</span>
+                                </div>
+                                <span class="text-sm font-semibold text-gray-900">{{ $activeInvestors }} ({{ $totalInvestors > 0 ? number_format(($activeInvestors / $totalInvestors) * 100, 1) : 0 }}%)</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                    <span class="text-sm text-gray-700">Pending</span>
+                                </div>
+                                <span class="text-sm font-semibold text-gray-900">{{ $pendingInvestors }} ({{ $totalInvestors > 0 ? number_format(($pendingInvestors / $totalInvestors) * 100, 1) : 0 }}%)</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                    <span class="text-sm text-gray-700">Inactive</span>
+                                </div>
+                                <span class="text-sm font-semibold text-gray-900">{{ $inactiveInvestors }} ({{ $totalInvestors > 0 ? number_format(($inactiveInvestors / $totalInvestors) * 100, 1) : 0 }}%)</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endif
@@ -206,7 +244,6 @@
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <!-- Investment Trends Chart Script -->
     @if($totalInvestors > 0)
     <script>
         // Investment Trends Chart
@@ -303,6 +340,61 @@
         };
 
         new Chart(investmentCtx, investmentConfig);
+
+        // Status Distribution Chart (Donut)
+        const statusCtx = document.getElementById('statusDistributionChart');
+        
+        const statusData = {
+            labels: ['Active', 'Pending', 'Inactive'],
+            datasets: [{
+                data: [{{ $activeInvestors }}, {{ $pendingInvestors }}, {{ $inactiveInvestors }}],
+                backgroundColor: [
+                    'rgb(16, 185, 129)',  // Emerald for Active
+                    'rgb(234, 179, 8)',    // Yellow for Pending
+                    'rgb(239, 68, 68)'     // Red for Inactive
+                ],
+                borderColor: '#fff',
+                borderWidth: 3,
+                hoverOffset: 10
+            }]
+        };
+
+        const statusConfig = {
+            type: 'doughnut',
+            data: statusData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false  // We're using custom legend below
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'  // Makes it a donut instead of pie
+            }
+        };
+
+        new Chart(statusCtx, statusConfig);
     </script>
     @endif
 </x-app-layout>
