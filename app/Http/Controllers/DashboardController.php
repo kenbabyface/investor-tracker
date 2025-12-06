@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Investor;
+use App\Models\Investment;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -31,6 +32,36 @@ class DashboardController extends Controller
             $chartData[] = $monthlyInvestment;
         }
 
+        // ROI Dashboard Data - NEW CODE BELOW
+        $currentMonth = Carbon::now();
+        
+        // ROI due this month
+        $roiThisMonth = Investment::where('roi_status', 'pending')
+            ->whereYear('roi_date', $currentMonth->year)
+            ->whereMonth('roi_date', $currentMonth->month)
+            ->with('investor')
+            ->get();
+        
+        // Total ROI amount due this month
+        $totalRoiThisMonth = $roiThisMonth->sum('roi_amount');
+        
+        // Overdue ROI
+        $overdueRoi = Investment::where('roi_status', 'pending')
+            ->where('roi_date', '<', Carbon::today())
+            ->with('investor')
+            ->get();
+        
+        // Total overdue amount
+        $totalOverdue = $overdueRoi->sum('roi_amount');
+        
+        // Upcoming ROI (next 30 days)
+        $upcomingRoi = Investment::where('roi_status', 'pending')
+            ->whereBetween('roi_date', [Carbon::today(), Carbon::today()->addDays(30)])
+            ->with('investor')
+            ->orderBy('roi_date', 'asc')
+            ->limit(5)
+            ->get();
+
         return view('dashboard', compact(
             'totalInvestors',
             'totalInvestment',
@@ -38,7 +69,12 @@ class DashboardController extends Controller
             'pendingInvestors',
             'inactiveInvestors',
             'chartLabels',
-            'chartData'
+            'chartData',
+            'roiThisMonth',
+            'totalRoiThisMonth',
+            'overdueRoi',
+            'totalOverdue',
+            'upcomingRoi'
         ));
     }
 }
