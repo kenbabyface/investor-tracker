@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Investor;
 use App\Models\Investment;
+use App\Models\InvestmentHistory;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -32,7 +33,7 @@ class DashboardController extends Controller
             $chartData[] = $monthlyInvestment;
         }
 
-        // ROI Dashboard Data - NEW CODE BELOW
+        // ROI Dashboard Data
         $currentMonth = Carbon::now();
         
         // ROI due this month
@@ -62,6 +63,12 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // NEW: Total ROI Statistics
+        $totalActiveInvestments = Investment::where('roi_status', 'pending')->sum('investment_amount');
+        $totalRoiPending = Investment::where('roi_status', 'pending')->sum('roi_amount');
+        $totalRoiPaid = InvestmentHistory::sum('roi_amount');
+        $totalRoiGenerated = $totalRoiPending + $totalRoiPaid;
+
         return view('dashboard', compact(
             'totalInvestors',
             'totalInvestment',
@@ -74,7 +81,11 @@ class DashboardController extends Controller
             'totalRoiThisMonth',
             'overdueRoi',
             'totalOverdue',
-            'upcomingRoi'
+            'upcomingRoi',
+            'totalActiveInvestments',
+            'totalRoiPending',
+            'totalRoiPaid',
+            'totalRoiGenerated'
         ));
     }
 }

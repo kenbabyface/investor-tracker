@@ -144,95 +144,88 @@
                 </div>
             </div>
 
-            <!-- ROI Dashboard Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 sm:mb-8">
-                <!-- ROI This Month Card -->
-                <div class="bg-white overflow-hidden shadow-lg rounded-xl border-l-4 border-blue-500 hover:shadow-xl transition transform hover:-translate-y-1">
-                    <div class="p-5 sm:p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">ROI This Month</p>
-                                <p class="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">${{ number_format($totalRoiThisMonth, 2) }}</p>
-                                <p class="mt-2 text-xs sm:text-sm text-gray-500">
-                                    <span class="text-blue-600 font-semibold">{{ $roiThisMonth->count() }} {{ $roiThisMonth->count() == 1 ? 'payment' : 'payments' }} due</span>
-                                </p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-full p-3 sm:p-4 shadow-lg">
-                                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-blue-50 px-5 sm:px-6 py-3">
-                        <a href="{{ route('investments.index') }}" class="text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center">
-                            View details
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </a>
-                    </div>
+            <!-- Consolidated ROI Dashboard Card -->
+            <div class="bg-white overflow-hidden shadow-xl rounded-xl border border-gray-200 mb-6 sm:mb-8">
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        ROI Dashboard
+                    </h3>
                 </div>
 
-                <!-- Overdue ROI Card -->
-                <div class="bg-white overflow-hidden shadow-lg rounded-xl border-l-4 border-red-500 hover:shadow-xl transition transform hover:-translate-y-1">
-                    <div class="p-5 sm:p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Overdue ROI</p>
-                                <p class="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">${{ number_format($totalOverdue, 2) }}</p>
-                                <p class="mt-2 text-xs sm:text-sm text-gray-500">
-                                    <span class="text-red-600 font-semibold">{{ $overdueRoi->count() }} {{ $overdueRoi->count() == 1 ? 'payment' : 'payments' }} overdue</span>
-                                </p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-full p-3 sm:p-4 shadow-lg">
-                                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                            </div>
+                <div class="p-6">
+                    <!-- Top Row: Key Metrics -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <!-- This Month -->
+                        <div class="text-center p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                            <p class="text-xs font-medium text-gray-600 uppercase">This Month</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($totalRoiThisMonth, 2) }}</p>
+                            <p class="text-xs text-blue-600 mt-1">{{ $roiThisMonth->count() }} payments</p>
                         </div>
-                    </div>
-                    <div class="bg-red-50 px-5 sm:px-6 py-3">
-                        <a href="{{ route('investments.index') }}" class="text-xs sm:text-sm font-medium text-red-600 hover:text-red-800 flex items-center">
-                            View overdue
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
 
-                <!-- Upcoming ROI Card -->
-                <div class="bg-white overflow-hidden shadow-lg rounded-xl border-l-4 border-green-500 hover:shadow-xl transition transform hover:-translate-y-1">
-                    <div class="p-5 sm:p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Next 30 Days</p>
-                                <p class="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">{{ $upcomingRoi->count() }}</p>
-                                <p class="mt-2 text-xs sm:text-sm text-gray-500">
-                                    <span class="text-green-600 font-semibold">Upcoming {{ $upcomingRoi->count() == 1 ? 'payment' : 'payments' }}</span>
-                                </p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-full p-3 sm:p-4 shadow-lg">
-                                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                                    </svg>
-                                </div>
-                            </div>
+                        <!-- Overdue -->
+                        <div class="text-center p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
+                            <p class="text-xs font-medium text-gray-600 uppercase">Overdue</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($totalOverdue, 2) }}</p>
+                            <p class="text-xs text-red-600 mt-1">{{ $overdueRoi->count() }} payments</p>
+                        </div>
+
+                        <!-- Next 30 Days -->
+                        <div class="text-center p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                            <p class="text-xs font-medium text-gray-600 uppercase">Next 30 Days</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">{{ $upcomingRoi->count() }}</p>
+                            <p class="text-xs text-green-600 mt-1">upcoming</p>
+                        </div>
+
+                        <!-- Total Pending -->
+                        <div class="text-center p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                            <p class="text-xs font-medium text-gray-600 uppercase">Total Pending</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($totalRoiPending, 2) }}</p>
+                            <p class="text-xs text-purple-600 mt-1">all unpaid</p>
                         </div>
                     </div>
-                    <div class="bg-green-50 px-5 sm:px-6 py-3">
-                        <a href="{{ route('investments.index') }}" class="text-xs sm:text-sm font-medium text-green-600 hover:text-green-800 flex items-center">
-                            View upcoming
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </a>
+
+                    <!-- Middle Row: Investment Summary -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg mb-6">
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">Active Investments</p>
+                            <p class="text-xl font-bold text-gray-900">${{ number_format($totalActiveInvestments, 2) }}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">ROI Paid (All-Time)</p>
+                            <p class="text-xl font-bold text-green-600">${{ number_format($totalRoiPaid, 2) }}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">Total ROI Generated</p>
+                            <p class="text-xl font-bold text-purple-600">${{ number_format($totalRoiGenerated, 2) }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Row: Progress Bar & Actions -->
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex-1 w-full">
+                            <div class="flex items-center justify-between text-sm mb-2">
+                                <span class="text-gray-600">ROI Completion Rate</span>
+                                @php
+                                    $completionRate = $totalRoiGenerated > 0 ? ($totalRoiPaid / $totalRoiGenerated) * 100 : 0;
+                                @endphp
+                                <span class="font-bold text-purple-600">{{ number_format($completionRate, 1) }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all" style="width: {{ $completionRate }}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <a href="{{ route('investments.index') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition">
+                                View All
+                            </a>
+                            <a href="{{ route('investments.history') }}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-semibold rounded-lg transition">
+                                History
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -342,37 +335,6 @@
                     </div>
                 </div>
             @endif
-
-            <!-- Quick Actions -->
-            <div class="bg-white overflow-hidden shadow-xl rounded-xl border border-blue-100 p-5 sm:p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    <a href="{{ route('investors.create') }}" class="flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition transform hover:-translate-y-0.5">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Add Investor
-                    </a>
-                    <a href="{{ route('investments.create') }}" class="flex items-center justify-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition transform hover:-translate-y-0.5">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Add Investment
-                    </a>
-                    <a href="{{ route('investors.index') }}" class="flex items-center justify-center bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-lg shadow-md border-2 border-gray-300 transition transform hover:-translate-y-0.5">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        All Investors
-                    </a>
-                    <a href="{{ route('investments.index') }}" class="flex items-center justify-center bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-lg shadow-md border-2 border-gray-300 transition transform hover:-translate-y-0.5">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        All Investments
-                    </a>
-                </div>
-            </div>
 
             <!-- Empty State (if no investors) -->
             @if($totalInvestors == 0)
