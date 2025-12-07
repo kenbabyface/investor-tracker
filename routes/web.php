@@ -23,9 +23,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // IMPORTANT: Export 
+    Route::get('/investors/export', [InvestorController::class, 'export'])->name('investors.export');
+    
+    // Investors Resource
     Route::resource('investors', InvestorController::class);
 
-     // Investments
+    // Investments Export
+    Route::get('/investments/export', [InvestmentController::class, 'exportInvestments'])->name('investments.export');
+    Route::get('/investments-history/export', [InvestmentController::class, 'exportHistory'])->name('investments.history.export');
+    
+    // Investments
     Route::get('/investments', [InvestmentController::class, 'index'])->name('investments.index');
     Route::get('/investments/create', [InvestmentController::class, 'create'])->name('investments.create');
     Route::post('/investments', [InvestmentController::class, 'store'])->name('investments.store');

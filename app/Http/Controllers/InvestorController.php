@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Investor;
 use Illuminate\Http\Request;
+use App\Exports\InvestorsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InvestorController extends Controller
 {
@@ -110,5 +112,10 @@ class InvestorController extends Controller
     {
         $investor->delete();
         return redirect()->route('investors.index')->with('success', 'Investor deleted successfully!');
+    }
+
+    public function export()
+    {
+        return Excel::download(new InvestorsExport, 'investors_' . date('Y-m-d') . '.xlsx');
     }
 }

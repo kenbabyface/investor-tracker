@@ -7,6 +7,9 @@ use App\Models\InvestmentHistory;
 use App\Models\Investor;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Exports\InvestmentsExport;
+use App\Exports\InvestmentHistoryExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InvestmentController extends Controller
 {
@@ -124,5 +127,15 @@ class InvestmentController extends Controller
     {
         $investment->delete();
         return redirect()->route('investments.index')->with('success', 'Investment deleted successfully!');
+    }
+
+        public function exportInvestments()
+    {
+        return Excel::download(new InvestmentsExport, 'active_investments_' . date('Y-m-d') . '.xlsx');
+    }
+
+    public function exportHistory()
+    {
+        return Excel::download(new InvestmentHistoryExport, 'investment_history_' . date('Y-m-d') . '.xlsx');
     }
 }
