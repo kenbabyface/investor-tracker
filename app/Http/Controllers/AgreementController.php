@@ -44,7 +44,7 @@ class AgreementController extends Controller
             'roiDate' => $investment->roi_date->format('jS \o\f F, Y'),
             'cycleType' => $cycleType,
             'investmentPeriod' => $cycleType === 'double_cycle' ? 'twelve (12) months' : 'six (6) months',
-            'todayDate' => Carbon::now()->format('jS \o\f F, Y'),
+            'agreementDate' => $investment->investment_date->format('jS \o\f F, Y'),
         ];
 
         if ($cycleType === 'double_cycle') {
@@ -159,7 +159,7 @@ const doc = new Document({
             }),
             new Paragraph({
                 children: [
-                    new TextRun({ text: `This Investment Agreement is made and entered into on this Day ${data.investmentDate} between `, size: 22 }),
+                    new TextRun({ text: `This Investment Agreement is made and entered into on this Day ${data.agreementDate} between `, size: 22 }),
                     new TextRun({ text: "TWINSTIAMIYU AGROSERVICES", bold: true, size: 22 }),
                     new TextRun({ text: ", located at Isire road Ikija Ijebu, and ", size: 22 }),
                     new TextRun({ text: data.investorName.toUpperCase(), bold: true, size: 22 }),
@@ -384,7 +384,7 @@ const doc = new Document({
             }),
             new Paragraph({
                 children: [
-                    new TextRun({ text: `This Investment Agreement is made and entered into on this Day ${data.todayDate} between `, size: 22 }),
+                   new TextRun({ text: `This Investment Agreement is made and entered into on this Day ${data.agreementDate} between `, size: 22 }),
                     new TextRun({ text: "TWINSTIAMIYU AGROSERVICES", bold: true, size: 22 }),
                     new TextRun({ text: ", located at Isire road Ikija Ijebu, and ", size: 22 }),
                     new TextRun({ text: data.investorName.toUpperCase(), bold: true, size: 22 }),
