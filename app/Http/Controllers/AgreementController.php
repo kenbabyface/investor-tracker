@@ -159,7 +159,7 @@ const doc = new Document({
             }),
             new Paragraph({
                 children: [
-                    new TextRun({ text: `This Investment Agreement is made and entered into on this Day ${data.todayDate} between `, size: 22 }),
+                    new TextRun({ text: `This Investment Agreement is made and entered into on this Day ${data.investmentDate} between `, size: 22 }),
                     new TextRun({ text: "TWINSTIAMIYU AGROSERVICES", bold: true, size: 22 }),
                     new TextRun({ text: ", located at Isire road Ikija Ijebu, and ", size: 22 }),
                     new TextRun({ text: data.investorName.toUpperCase(), bold: true, size: 22 }),
