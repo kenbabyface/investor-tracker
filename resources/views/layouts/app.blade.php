@@ -64,7 +64,7 @@
                             <span class="font-medium">All Investors</span>
                         </a>
 
-                        <a href="{{ route('investors.create') }}" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10">
+                        <a href="javascript:void(0)"  onclick="openPasswordModal('{{ route('investors.create') }}')" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                             </svg>
@@ -174,5 +174,218 @@
                 overlay.classList.add('hidden');
             });
         </script>
+
+     <!-- Admin Password Modal - REPLACE the entire modal div -->
+<div id="adminPasswordModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50 p-4">
+    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl transform transition-all">
+        <div class="p-6">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        🔐 Admin Verification
+                    </h3>
+                    <p class="text-sm text-gray-500 mt-1">Enter password to continue</p>
+                </div>
+                <button onclick="closePasswordModal()" 
+                        class="text-gray-400 hover:text-gray-600 transition-colors rounded-lg p-1 hover:bg-gray-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <form id="adminPasswordForm" onsubmit="verifyPassword(event)" class="space-y-5">
+                @csrf
+                
+                <!-- Password Input -->
+                <div>
+                    <label for="admin_password" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Password
+                    </label>
+                    <input type="password" 
+                           id="admin_password" 
+                           name="password"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                           placeholder="Enter admin password"
+                           required
+                           autocomplete="off">
+                </div>
+
+                <!-- Error Message -->
+                <div id="passwordError" class="hidden p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <span id="passwordErrorMessage" class="text-sm font-medium"></span>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-3">
+                    <button type="submit" 
+                            id="verifyButton"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40">
+                        <span id="verifyButtonText">Verify</span>
+                        <span id="verifyButtonSpinner" class="hidden flex items-center justify-center gap-2">
+                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Verifying...
+                        </span>
+                    </button>
+                    <button type="button" 
+                            onclick="closePasswordModal()"
+                            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-all duration-200">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+
+            
+        </div>
+    </div>
+</div>
+
+<script>
+let redirectUrl = '';
+
+function openPasswordModal(targetUrl) {
+    redirectUrl = targetUrl;
+    const modal = document.getElementById('adminPasswordModal');
+    modal.classList.remove('hidden');
+    
+    // Add animation class
+    setTimeout(() => {
+        modal.querySelector('.relative').classList.add('scale-100', 'opacity-100');
+    }, 10);
+    
+    document.getElementById('admin_password').focus();
+    
+    // Clear previous state
+    document.getElementById('passwordError').classList.add('hidden');
+    document.getElementById('admin_password').value = '';
+}
+
+function closePasswordModal() {
+    const modal = document.getElementById('adminPasswordModal');
+    modal.classList.add('hidden');
+    document.getElementById('admin_password').value = '';
+    document.getElementById('passwordError').classList.add('hidden');
+    redirectUrl = '';
+}
+
+async function verifyPassword(event) {
+    event.preventDefault();
+    
+    const password = document.getElementById('admin_password').value;
+    const verifyButton = document.getElementById('verifyButton');
+    const verifyButtonText = document.getElementById('verifyButtonText');
+    const verifyButtonSpinner = document.getElementById('verifyButtonSpinner');
+    const errorDiv = document.getElementById('passwordError');
+    const errorMessage = document.getElementById('passwordErrorMessage');
+    
+    // Show loading state
+    verifyButton.disabled = true;
+    verifyButtonText.classList.add('hidden');
+    verifyButtonSpinner.classList.remove('hidden');
+    errorDiv.classList.add('hidden');
+    
+    try {
+        const response = await fetch('{{ route("admin.verify") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ password: password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Success! Redirect to target page
+            window.location.href = redirectUrl;
+        } else {
+            // Show error
+            errorMessage.textContent = data.message || 'Incorrect password. Please try again.';
+            errorDiv.classList.remove('hidden');
+            
+            // Shake animation
+            errorDiv.classList.add('animate-shake');
+            setTimeout(() => errorDiv.classList.remove('animate-shake'), 500);
+            
+            // Reset button
+            verifyButton.disabled = false;
+            verifyButtonText.classList.remove('hidden');
+            verifyButtonSpinner.classList.add('hidden');
+            
+            // Clear password field and focus
+            document.getElementById('admin_password').value = '';
+            document.getElementById('admin_password').focus();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        errorMessage.textContent = 'Network error. Please check your connection.';
+        errorDiv.classList.remove('hidden');
+        
+        // Reset button
+        verifyButton.disabled = false;
+        verifyButtonText.classList.remove('hidden');
+        verifyButtonSpinner.classList.add('hidden');
+    }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && !document.getElementById('adminPasswordModal').classList.contains('hidden')) {
+        closePasswordModal();
+    }
+});
+
+// Close modal when clicking outside
+document.getElementById('adminPasswordModal')?.addEventListener('click', function(event) {
+    if (event.target === this) {
+        closePasswordModal();
+    }
+});
+</script>
+
+<style>
+/* Modal styling */
+#adminPasswordModal {
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+#adminPasswordModal > div {
+    animation: modalScaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalScaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.animate-shake {
+    animation: shake 0.5s;
+}
+</style>
     </body>
 </html>
