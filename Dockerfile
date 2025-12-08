@@ -1,5 +1,8 @@
 FROM php:8.2-fpm
 
+# Set working directory early
+WORKDIR /var/www/html
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -10,12 +13,13 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
-    nodejs \
-    npm \
-    default-mysql-client
+    default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install Node.js 18.x (newer version for better compatibility)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions including GD and MySQL
 RUN docker-php-ext-install pdo_mysql mysqli mbstring exif pcntl bcmath gd zip
@@ -23,20 +27,29 @@ RUN docker-php-ext-install pdo_mysql mysqli mbstring exif pcntl bcmath gd zip
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www
-
 # Copy existing application directory
 COPY . .
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-# Install npm dependencies and build
+# Install npm dependencies (including docx for agreement generation)
 RUN npm ci && npm run build
 
-# Change ownership
-RUN chown -R www-data:www-data /var/www
+# Install docx package specifically for agreement generation
+RUN npm install docx --save
+
+# Create storage directories with proper permissions
+RUN mkdir -p storage/app/agreements \
+    && mkdir -p storage/framework/cache \
+    && mkdir -p storage/framework/sessions \
+    && mkdir -p storage/framework/views \
+    && mkdir -p storage/logs \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+# Change ownership of entire application
+RUN chown -R www-data:www-data /var/www/html
 
 # Expose port
 EXPOSE 8000

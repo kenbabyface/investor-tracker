@@ -164,6 +164,18 @@
 
             <!-- Actions -->
             <div class="flex flex-col sm:flex-row gap-3">
+                <!-- Generate Agreement Button (Only for pending ROI) -->
+                @if($investment->roi_status == 'pending')
+                    <a href="{{ route('investments.generate-agreement', $investment) }}" 
+                       class="flex-1 text-center bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-3 px-6 rounded-lg shadow-md transition flex items-center justify-center transform hover:-translate-y-0.5">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Generate Agreement
+                    </a>
+                @endif
+
+                <!-- Mark as Paid Button -->
                 @if($investment->roi_status == 'pending')
                     <form action="{{ route('investments.markAsPaid', $investment) }}" method="POST" class="flex-1">
                         @csrf
@@ -177,6 +189,7 @@
                     </form>
                 @endif
 
+                <!-- Back Button -->
                 <a href="{{ route('investments.index') }}" 
                    class="flex-1 text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded-lg transition flex items-center justify-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,6 +198,7 @@
                     Back to Investments
                 </a>
 
+                <!-- Delete Button -->
                 <form action="{{ route('investments.destroy', $investment) }}" method="POST" class="flex-1">
                     @csrf
                     @method('DELETE')
