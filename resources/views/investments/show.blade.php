@@ -60,13 +60,13 @@
                         <!-- Investment Amount -->
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Investment Amount</label>
-                            <p class="text-2xl font-bold text-gray-900">${{ number_format($investment->investment_amount, 2) }}</p>
+                            <p class="text-2xl font-bold text-gray-900">₦{{ number_format($investment->investment_amount, 2) }}</p>
                         </div>
 
                         <!-- ROI Amount -->
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">ROI Amount (20%)</label>
-                            <p class="text-2xl font-bold text-green-600">${{ number_format($investment->roi_amount, 2) }}</p>
+                            <p class="text-2xl font-bold text-green-600">₦{{ number_format($investment->roi_amount, 2) }}</p>
                         </div>
 
                         <!-- Investment Date -->
@@ -138,14 +138,14 @@
                         <div class="bg-white rounded-lg p-4 shadow">
                             <p class="text-sm text-gray-600 mb-1">Total Return</p>
                             @if($investment->investment_type == 'single_cycle')
-                                <p class="text-2xl font-bold text-green-600">${{ number_format($investment->investment_amount + $investment->roi_amount, 2) }}</p>
+                                <p class="text-2xl font-bold text-green-600">₦{{ number_format($investment->investment_amount + $investment->roi_amount, 2) }}</p>
                                 <p class="text-xs text-gray-500 mt-1">Capital + ROI</p>
                             @else
                                 @if($investment->cycle_number == 1)
-                                    <p class="text-2xl font-bold text-green-600">${{ number_format($investment->roi_amount, 2) }}</p>
+                                    <p class="text-2xl font-bold text-green-600">₦{{ number_format($investment->roi_amount, 2) }}</p>
                                     <p class="text-xs text-gray-500 mt-1">ROI Only (Cycle 1)</p>
                                 @else
-                                    <p class="text-2xl font-bold text-green-600">${{ number_format($investment->investment_amount + $investment->roi_amount, 2) }}</p>
+                                    <p class="text-2xl font-bold text-green-600">₦{{ number_format($investment->investment_amount + $investment->roi_amount, 2) }}</p>
                                     <p class="text-xs text-gray-500 mt-1">Capital + ROI (Cycle 2)</p>
                                 @endif
                             @endif
@@ -154,7 +154,7 @@
                         @if($investment->investment_type == 'double_cycle' && $investment->cycle_number == 1)
                             <div class="bg-white rounded-lg p-4 shadow">
                                 <p class="text-sm text-gray-600 mb-1">Next Cycle Return</p>
-                                <p class="text-2xl font-bold text-blue-600">${{ number_format($investment->investment_amount + $investment->roi_amount, 2) }}</p>
+                                <p class="text-2xl font-bold text-blue-600">₦{{ number_format($investment->investment_amount + $investment->roi_amount, 2) }}</p>
                                 <p class="text-xs text-gray-500 mt-1">After Cycle 2</p>
                             </div>
                         @endif

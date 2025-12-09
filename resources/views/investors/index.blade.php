@@ -228,7 +228,7 @@
                                             <div class="text-xs sm:text-sm text-gray-900">{{ $investor->company ?? 'N/A' }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4">
-                                            <div class="text-xs sm:text-sm font-bold text-green-600">${{ number_format($investor->investment_amount, 2) }}</div>
+                                            <div class="text-xs sm:text-sm font-bold text-green-600">₦{{ number_format($investor->investment_amount, 2) }}</div>
                                             <div class="text-xs text-gray-500 md:hidden mt-0.5">{{ $investor->company ?? 'N/A' }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">

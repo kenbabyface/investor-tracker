@@ -119,7 +119,7 @@
                                 <div>
                                     <label for="investment_amount" class="block text-sm font-semibold text-gray-700 mb-2">Investment Amount *</label>
                                     <div class="relative">
-                                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">$</span>
+                                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">₦</span>
                                         <input type="number" name="investment_amount" id="investment_amount" value="{{ old('investment_amount', $investor->investment_amount) }}" step="0.01" min="0" required
                                             class="w-full pl-8 pr-4 py-3 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200"
                                             placeholder="0.00">

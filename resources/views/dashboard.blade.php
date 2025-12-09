@@ -53,7 +53,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Investment</p>
-                                <p class="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">${{ number_format($totalInvestment, 0) }}</p>
+                                <p class="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">₦{{ number_format($totalInvestment, 0) }}</p>
                                 @if($totalInvestment > 0)
                                     <p class="mt-2 text-xs sm:text-sm text-gray-500">
                                         <span class="text-green-600 font-semibold">{{ $totalInvestors }} investors</span>
@@ -161,14 +161,14 @@
                         <!-- This Month -->
                         <div class="text-center p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
                             <p class="text-xs font-medium text-gray-600 uppercase">This Month</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($totalRoiThisMonth, 2) }}</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">₦{{ number_format($totalRoiThisMonth, 2) }}</p>
                             <p class="text-xs text-blue-600 mt-1">{{ $roiThisMonth->count() }} payments</p>
                         </div>
 
                         <!-- Overdue -->
                         <div class="text-center p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
                             <p class="text-xs font-medium text-gray-600 uppercase">Overdue</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($totalOverdue, 2) }}</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">₦{{ number_format($totalOverdue, 2) }}</p>
                             <p class="text-xs text-red-600 mt-1">{{ $overdueRoi->count() }} payments</p>
                         </div>
 
@@ -182,7 +182,7 @@
                         <!-- Total Pending -->
                         <div class="text-center p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
                             <p class="text-xs font-medium text-gray-600 uppercase">Total Pending</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($totalRoiPending, 2) }}</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">₦{{ number_format($totalRoiPending, 2) }}</p>
                             <p class="text-xs text-purple-600 mt-1">all unpaid</p>
                         </div>
                     </div>
@@ -191,15 +191,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg mb-6">
                         <div class="text-center">
                             <p class="text-sm text-gray-600">Active Investments</p>
-                            <p class="text-xl font-bold text-gray-900">${{ number_format($totalActiveInvestments, 2) }}</p>
+                            <p class="text-xl font-bold text-gray-900">₦{{ number_format($totalActiveInvestments, 2) }}</p>
                         </div>
                         <div class="text-center">
                             <p class="text-sm text-gray-600">ROI Paid (All-Time)</p>
-                            <p class="text-xl font-bold text-green-600">${{ number_format($totalRoiPaid, 2) }}</p>
+                            <p class="text-xl font-bold text-green-600">₦{{ number_format($totalRoiPaid, 2) }}</p>
                         </div>
                         <div class="text-center">
                             <p class="text-sm text-gray-600">Total ROI Generated</p>
-                            <p class="text-xl font-bold text-purple-600">${{ number_format($totalRoiGenerated, 2) }}</p>
+                            <p class="text-xl font-bold text-purple-600">₦{{ number_format($totalRoiGenerated, 2) }}</p>
                         </div>
                     </div>
 
@@ -254,7 +254,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right mr-6">
-                                        <p class="font-bold text-green-600 text-lg">${{ number_format($investment->roi_amount, 2) }}</p>
+                                        <p class="font-bold text-green-600 text-lg">₦{{ number_format($investment->roi_amount, 2) }}</p>
                                         <p class="text-sm text-gray-500">ROI Amount</p>
                                     </div>
                                     <div class="text-right">

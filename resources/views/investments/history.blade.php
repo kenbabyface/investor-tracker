@@ -77,7 +77,7 @@
                                             <div class="text-xs text-gray-500">{{ $record->investor->email }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
-                                            <div class="text-xs sm:text-sm font-bold text-gray-900">${{ number_format($record->investment_amount, 2) }}</div>
+                                            <div class="text-xs sm:text-sm font-bold text-gray-900">₦{{ number_format($record->investment_amount, 2) }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
                                             <div class="text-xs sm:text-sm text-gray-900">{{ $record->investment_date->format('M d, Y') }}</div>
@@ -86,7 +86,7 @@
                                             <div class="text-xs sm:text-sm text-gray-900">{{ $record->roi_date->format('M d, Y') }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4">
-                                            <div class="text-xs sm:text-sm font-bold text-green-600">${{ number_format($record->roi_amount, 2) }}</div>
+                                            <div class="text-xs sm:text-sm font-bold text-green-600">₦{{ number_format($record->roi_amount, 2) }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
                                             <div class="text-xs sm:text-sm text-gray-900">{{ $record->payment_date->format('M d, Y') }}</div>

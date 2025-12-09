@@ -89,7 +89,7 @@
                                             <div class="text-xs text-gray-500">{{ $investment->investor->email }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
-                                            <div class="text-xs sm:text-sm font-bold text-gray-900">${{ number_format($investment->investment_amount, 2) }}</div>
+                                            <div class="text-xs sm:text-sm font-bold text-gray-900">₦{{ number_format($investment->investment_amount, 2) }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
                                             <div class="text-xs sm:text-sm text-gray-900">{{ $investment->investment_date->format('M d, Y') }}</div>
@@ -110,7 +110,7 @@
                                             @endif
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
-                                            <div class="text-xs sm:text-sm font-bold text-green-600">${{ number_format($investment->roi_amount, 2) }}</div>
+                                            <div class="text-xs sm:text-sm font-bold text-green-600">₦{{ number_format($investment->roi_amount, 2) }}</div>
                                         </td>
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
                                             <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 

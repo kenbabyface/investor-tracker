@@ -77,7 +77,7 @@
                                 </svg>
                             </div>
                             <h4 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-2">Total Investment</h4>
-                            <p class="text-4xl font-bold text-blue-600 mb-4">${{ number_format($investor->investment_amount, 2) }}</p>
+                            <p class="text-4xl font-bold text-blue-600 mb-4">₦{{ number_format($investor->investment_amount, 2) }}</p>
                             <div class="pt-4 border-t border-gray-200">
                                 <p class="text-xs text-gray-500 mb-1">Member Since</p>
                                 <p class="text-sm font-semibold text-gray-700">{{ $investor->created_at->format('M d, Y') }}</p>
