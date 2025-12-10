@@ -1,4 +1,4 @@
-<x-app-layout :title="'Profile - Twintiamiyu Investor Tracker'">
+<x-app-layout title="Profile">
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 px-4 sm:px-0">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">

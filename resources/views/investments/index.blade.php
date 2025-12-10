@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="All Investments">
     <x-slot name="header">
         <div class="space-y-2 px-4 sm:px-0">
             <nav class="text-sm">

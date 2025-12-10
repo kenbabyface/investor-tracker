@@ -1,4 +1,4 @@
-<x-app-layout :title="'Edit Investor - Twintiamiyu Investor Tracker'">
+<x-app-layout title="Edit {{ $investor->name }}">
     <x-slot name="header">
         <div class="space-y-2">
             <nav class="text-sm">
