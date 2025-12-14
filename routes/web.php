@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\AgreementController;
 use App\Http\Controllers\AdminPasswordController;
+use App\Http\Controllers\PaymentScheduleController;
 use App\Http\Middleware\CheckAdminPassword;
 use Illuminate\Support\Facades\Route;
 
@@ -69,6 +70,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/investments', [InvestmentController::class, 'index'])->name('investments.index');
     Route::get('/investments/{investment}', [InvestmentController::class, 'show'])->name('investments.show');
     Route::delete('/investments/{investment}', [InvestmentController::class, 'destroy'])->name('investments.destroy');
+
+     // Payment Schedule Route
+    Route::get('/payment-schedule', [PaymentScheduleController::class, 'index'])->name('payments.schedule');
 });
 
 require __DIR__.'/auth.php';
