@@ -28,7 +28,7 @@ class InvestmentController extends Controller
         return view('investments.create', compact('investors'));
     }
 
-    public function store(Request $request)
+        public function store(Request $request)
     {
         $validated = $request->validate([
             'investor_id' => 'required|exists:investors,id',
@@ -37,7 +37,13 @@ class InvestmentController extends Controller
             'investment_type' => 'required|in:single_cycle,double_cycle',
         ]);
 
-        $validated['roi_date'] = Investment::calculateRoiDate($validated['investment_date']);
+        if ($validated['investment_type'] === 'double_cycle') {
+
+            $validated['roi_date'] = Carbon::parse($validated['investment_date'])->addMonths(12);
+        } else {
+            $validated['roi_date'] = Carbon::parse($validated['investment_date'])->addMonths(6);
+        }
+
         $validated['roi_amount'] = Investment::calculateRoiAmount($validated['investment_amount']);
         $validated['cycle_number'] = 1;
         $validated['roi_status'] = 'pending';
