@@ -139,7 +139,7 @@
                             <h4 class="text-lg font-bold text-gray-800 ml-3">Single Cycle Payments (Capital + ROI)</h4>
                         </div>
 
-                        <div class="bg-blue-50 rounded-xl overflow-hidden">
+                        <div class="bg-blue-50 rounded-xl overflow-x-auto">
                             <table class="w-full">
                                 <thead class="bg-blue-100">
                                     <tr>
@@ -201,7 +201,7 @@
                             <h4 class="text-lg font-bold text-gray-800 ml-3">Double Cycle - First Payment (ROI Only)</h4>
                         </div>
 
-                        <div class="bg-green-50 rounded-xl overflow-hidden">
+                        <div class="bg-green-50 rounded-xl overflow-x-auto">
                             <table class="w-full">
                                 <thead class="bg-green-100">
                                     <tr>
@@ -253,7 +253,7 @@
                             <h4 class="text-lg font-bold text-gray-800 ml-3">Double Cycle - Second Payment (Capital + ROI)</h4>
                         </div>
 
-                        <div class="bg-purple-50 rounded-xl overflow-hidden">
+                        <div class="bg-purple-50 rounded-xl overflow-x-auto">
                             <table class="w-full">
                                 <thead class="bg-purple-100">
                                     <tr>
