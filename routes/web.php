@@ -18,32 +18,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-
-    // Temporary route to fix double cycle dates (REMOVE AFTER RUNNING)
-Route::get('/fix-double-cycle-dates-temp-12345', function () {
-    $investments = \App\Models\Investment::where('investment_type', 'double_cycle')
-        ->where('roi_status', 'pending')
-        ->get();
-
-    $updated = 0;
-    $results = [];
-
-    foreach ($investments as $investment) {
-        $old = $investment->roi_date->format('Y-m-d');
-        $investment->roi_date = \Carbon\Carbon::parse($investment->investment_date)->addMonths(12);
-        $investment->save();
-        
-        $results[] = "Updated: {$investment->investor->name} - {$old} → {$investment->roi_date->format('Y-m-d')}";
-        $updated++;
-    }
-
-    return response()->json([
-        'success' => true,
-        'updated' => $updated,
-        'results' => $results
-    ]);
-})->middleware('auth');
-
 Route::middleware('auth')->group(function () {
     
     // Read-only profile
