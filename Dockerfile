@@ -50,9 +50,9 @@ RUN mkdir -p storage/app/agreements \
 
 # Change ownership of entire application
 RUN chown -R www-data:www-data /var/www/html
-
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 # Expose port
 EXPOSE 8000
 
 # Start application
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
+CMD php artisan config:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
