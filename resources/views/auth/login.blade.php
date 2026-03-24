@@ -87,7 +87,7 @@
                     </button>
                 </form>
 
-<!--             
+            
                 <div class="mt-6 pt-5 border-t border-gray-200">
                     <p class="text-center text-gray-600 text-sm">
                         Don't have an account?
@@ -95,7 +95,7 @@
                             Create Account
                         </a>
                     </p>
-                </div> -->
+                </div>
 
                 <!-- Footer Info -->
                 <div class="mt-4 text-center">
