@@ -40,7 +40,7 @@
                 <div class="p-6 md:p-8">
                     <form action="{{ route('investors.update', $investor) }}" method="POST" class="space-y-6">
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
 
                         <!-- Personal Information Section -->
                         <div class="bg-white rounded-xl p-6 shadow-sm border border-blue-100">
