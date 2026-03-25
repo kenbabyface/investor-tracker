@@ -52,7 +52,7 @@
                     <div class="p-5 sm:p-6">
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Investment</p>
+                                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Investor Funds</p>
                                 <p class="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">₦{{ number_format($totalInvestment, 0) }}</p>
                                 @if($totalInvestment > 0)
                                     <p class="mt-2 text-xs sm:text-sm text-gray-500">
