@@ -7,6 +7,9 @@ use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\AgreementController;
 use App\Http\Controllers\AdminPasswordController;
 use App\Http\Controllers\PaymentScheduleController;
+use App\Http\Controllers\PondController;
+use App\Http\Controllers\FeedSizeController;
+use App\Http\Controllers\DailyFeedLogController;
 use App\Http\Middleware\CheckAdminPassword;
 use Illuminate\Support\Facades\Route;
 
@@ -71,8 +74,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/investments/{investment}', [InvestmentController::class, 'show'])->name('investments.show');
     Route::delete('/investments/{investment}', [InvestmentController::class, 'destroy'])->name('investments.destroy');
 
-     // Payment Schedule Route
+    // Payment Schedule Route
     Route::get('/payment-schedule', [PaymentScheduleController::class, 'index'])->name('payments.schedule');
+
+    // --- Ponds Management ---
+    Route::resource('ponds', PondController::class);
+    
+    // --- Feed Sizes / Settings ---
+    Route::prefix('feed-sizes')->name('feed-sizes.')->group(function () {
+        Route::get('/', [FeedSizeController::class, 'index'])->name('index');
+        Route::post('/', [FeedSizeController::class, 'store'])->name('store');
+        Route::put('/{feedSize}', [FeedSizeController::class, 'update'])->name('update');
+        Route::delete('/{feedSize}', [FeedSizeController::class, 'destroy'])->name('destroy');
+        Route::get('/{feedSize}/price', [FeedSizeController::class, 'getPrice'])->name('price'); 
+    });
+    
+    // --- Daily Feed Logs ---
+    Route::get('/fish/overview', [DailyFeedLogController::class, 'overview'])->name('feed-logs.overview');
+    Route::resource('feed-logs', DailyFeedLogController::class)->except(['show']);
 });
 
 require __DIR__.'/auth.php';
