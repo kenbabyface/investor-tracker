@@ -19,17 +19,17 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-green-500">
                 <p class="text-xs text-gray-500 uppercase font-semibold tracking-wide">Today — All Ponds</p>
-                <p class="text-3xl font-bold text-green-700 mt-1">{{ number_format($overallStats['total_kg_today'], 2) }} <span class="text-base font-normal text-gray-400">kg</span></p>
+                <p class="text-3xl font-bold text-green-700 mt-1">{{ number_format($overallStats['total_kg_today'], 0) }} <span class="text-base font-normal text-gray-400">Bags</span></p>
                 <p class="text-sm text-gray-500 mt-0.5">₦{{ number_format($overallStats['total_cost_today'], 2) }}</p>
             </div>
             <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-yellow-500">
                 <p class="text-xs text-gray-500 uppercase font-semibold tracking-wide">This Month</p>
-                <p class="text-3xl font-bold text-yellow-700 mt-1">{{ number_format($overallStats['total_kg_month'], 2) }} <span class="text-base font-normal text-gray-400">kg</span></p>
+                <p class="text-3xl font-bold text-yellow-700 mt-1">{{ number_format($overallStats['total_kg_month'], 0) }} <span class="text-base font-normal text-gray-400">Bags</span></p>
                 <p class="text-sm text-gray-500 mt-0.5">₦{{ number_format($overallStats['total_cost_month'], 2) }}</p>
             </div>
             <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-purple-500">
                 <p class="text-xs text-gray-500 uppercase font-semibold tracking-wide">All Time</p>
-                <p class="text-3xl font-bold text-purple-700 mt-1">{{ number_format($overallStats['total_kg_alltime'], 2) }} <span class="text-base font-normal text-gray-400">kg</span></p>
+                <p class="text-3xl font-bold text-purple-700 mt-1">{{ number_format($overallStats['total_kg_alltime'], 0) }} <span class="text-base font-normal text-gray-400">Bags</span></p>
                 <p class="text-sm text-gray-500 mt-0.5">₦{{ number_format($overallStats['total_cost_alltime'], 2) }}</p>
             </div>
         </div>
