@@ -2,7 +2,7 @@
     <x-slot name="title">Fish Overview</x-slot>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="text-xl font-bold text-gray-800">🐟 Fish & Feed Overview</h2>
+            <h2 class="text-xl font-bold text-gray-800"> Fish & Feed Overview</h2>
             <a href="{{ route('feed-logs.create') }}"
                class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-xl shadow transition text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
