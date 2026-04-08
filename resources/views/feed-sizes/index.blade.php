@@ -31,7 +31,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-                            Price per kg (₦) <span class="text-red-500">*</span>
+                            Price per bag (₦) <span class="text-red-500">*</span>
                         </label>
                         <input type="number" name="price_per_kg" value="{{ old('price_per_kg') }}"
                                placeholder="e.g. 1500.00" min="0" step="0.01"
@@ -64,7 +64,6 @@
 
             @if($feedSizes->isEmpty())
                 <div class="p-12 text-center text-gray-400">
-                    <!-- <div class="text-4xl mb-3">🐟</div> -->
                     <p class="font-medium">No feed types added yet.</p>
                     <p class="text-sm mt-1">Add your first feed type using the form above.</p>
                 </div>
@@ -88,7 +87,7 @@
                                 <div class="ml-auto text-right flex-shrink-0">
                                     <p class="font-bold text-green-700">
                                         ₦{{ number_format($feedSize->price_per_kg, 2) }}
-                                        <span class="text-xs font-normal text-gray-400">/kg</span>
+                                        <span class="text-xs font-normal text-gray-400">/bag</span>
                                     </p>
                                     @if(!$feedSize->is_active)
                                         <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Inactive</span>
@@ -97,19 +96,50 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="flex gap-1 flex-shrink-0">
-                                <button onclick="showEdit({{ $feedSize->id }})"
-                                        class="text-sm text-blue-500 hover:text-blue-700 font-medium px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
-                                    Edit
+
+                            {{-- Three-dot dropdown --}}
+                            <div class="relative flex-shrink-0" x-data="{ open: false }" @click.outside="open = false">
+                                <button @click="open = !open"
+                                        class="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="5" r="1.5"/>
+                                        <circle cx="12" cy="12" r="1.5"/>
+                                        <circle cx="12" cy="19" r="1.5"/>
+                                    </svg>
                                 </button>
-                                <form action="{{ route('feed-sizes.destroy', $feedSize) }}" method="POST"
-                                      onsubmit="return confirm('Delete {{ addslashes($feedSize->name) }}? This cannot be undone.')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit"
-                                            class="text-sm text-red-400 hover:text-red-600 font-medium px-3 py-1.5 rounded-lg hover:bg-red-50 transition">
-                                        Delete
+
+                                <div x-show="open"
+                                     x-transition:enter="transition ease-out duration-100"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-75"
+                                     x-transition:leave-start="opacity-100 scale-100"
+                                     x-transition:leave-end="opacity-0 scale-95"
+                                     class="absolute right-0 mt-1 w-36 bg-white border border-gray-100 rounded-xl shadow-lg z-10 py-1"
+                                     style="display: none;">
+
+                                    <button @click="open = false; showEdit({{ $feedSize->id }})"
+                                            class="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                        Edit
                                     </button>
-                                </form>
+
+                                    <form action="{{ route('feed-sizes.destroy', $feedSize) }}" method="POST"
+                                          onsubmit="return confirm('Delete {{ addslashes($feedSize->name) }}? This cannot be undone.')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"
+                                                class="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
 
@@ -131,7 +161,7 @@
                                                class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     </div>
                                     <div>
-                                        <label class="block text-xs text-gray-500 mb-1">Price per kg (₦) *</label>
+                                        <label class="block text-xs text-gray-500 mb-1">Price per bags (₦) *</label>
                                         <input type="number" name="price_per_kg" value="{{ $feedSize->price_per_kg }}"
                                                min="0" step="0.01" required
                                                class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
