@@ -52,4 +52,13 @@ class Investment extends Model
     {
         return Carbon::now()->diffInDays($this->roi_date, false);
     }
+    
+        public function getMidpointRoiDate(): ?Carbon
+    {
+        if ($this->investment_type !== 'double_cycle' || $this->cycle_number !== 1) {
+            return null;
+        }
+
+        return Carbon::parse($this->investment_date)->addMonths(6);
+    }
 }

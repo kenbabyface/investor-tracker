@@ -86,11 +86,21 @@
                                         <td class="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
                                             <div class="text-xs sm:text-sm text-gray-900">{{ $investment->investment_date->format('M d, Y') }}</div>
                                         </td>
-                                        <td class="px-3 sm:px-6 py-3 sm:py-4">
-                                            <div class="text-xs sm:text-sm font-semibold text-gray-900">{{ $investment->roi_date->format('M d, Y') }}</div>
-                                            @php
-                                                $daysUntil = $investment->daysUntilRoi();
-                                            @endphp
+                                       <td class="px-3 sm:px-6 py-3 sm:py-4">
+                                            @if($investment->investment_type === 'double_cycle' && $investment->cycle_number === 1)
+                                                @php $midpoint = $investment->getMidpointRoiDate(); @endphp
+                                                <div class="text-xs sm:text-sm font-semibold text-gray-900">
+                                                    {{ $midpoint->format('M d, Y') }}
+                                                </div>
+                                                <div class="text-xs text-purple-500 font-medium">Cycle 1 of 2</div>
+                                                @php $daysUntil = now()->diffInDays($midpoint, false); @endphp
+                                            @else
+                                                <div class="text-xs sm:text-sm font-semibold text-gray-900">
+                                                    {{ $investment->roi_date->format('M d, Y') }}
+                                                </div>
+                                                @php $daysUntil = $investment->daysUntilRoi(); @endphp
+                                            @endif
+
                                             @if($daysUntil < 0)
                                                 <div class="text-xs text-red-600 font-semibold">Overdue by {{ abs($daysUntil) }} days</div>
                                             @elseif($daysUntil == 0)
