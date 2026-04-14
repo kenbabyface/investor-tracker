@@ -44,17 +44,17 @@
             </div>
             <div class="bg-white rounded-2xl shadow p-4 border-l-4 border-green-500">
                 <p class="text-xs text-gray-400 uppercase font-semibold tracking-wide">Today</p>
-                <p class="text-2xl font-bold text-green-700 mt-1">{{ number_format($stats['today_feed_kg'], 2) }} <span class="text-sm font-normal text-gray-400">kg</span></p>
+                <p class="text-2xl font-bold text-green-700 mt-1">{{ number_format($stats['today_feed_kg'], 0) }} <span class="text-sm font-normal text-gray-400">Bag</span></p>
                 <p class="text-xs text-gray-400 mt-0.5">₦{{ number_format($stats['today_cost'], 2) }}</p>
             </div>
             <div class="bg-white rounded-2xl shadow p-4 border-l-4 border-yellow-500">
                 <p class="text-xs text-gray-400 uppercase font-semibold tracking-wide">This Month</p>
-                <p class="text-2xl font-bold text-yellow-700 mt-1">{{ number_format($stats['this_month_kg'], 2) }} <span class="text-sm font-normal text-gray-400">kg</span></p>
+                <p class="text-2xl font-bold text-yellow-700 mt-1">{{ number_format($stats['this_month_kg'], 0) }} <span class="text-sm font-normal text-gray-400">Bag</span></p>
                 <p class="text-xs text-gray-400 mt-0.5">₦{{ number_format($stats['this_month_cost'], 2) }}</p>
             </div>
             <div class="bg-white rounded-2xl shadow p-4 border-l-4 border-purple-500">
                 <p class="text-xs text-gray-400 uppercase font-semibold tracking-wide">All Time</p>
-                <p class="text-2xl font-bold text-purple-700 mt-1">{{ number_format($stats['total_feed_kg'], 2) }} <span class="text-sm font-normal text-gray-400">kg</span></p>
+                <p class="text-2xl font-bold text-purple-700 mt-1">{{ number_format($stats['total_feed_kg'], 0) }} <span class="text-sm font-normal text-gray-400">Bag</span></p>
                 <p class="text-xs text-gray-400 mt-0.5">₦{{ number_format($stats['total_cost'], 2) }}</p>
             </div>
         </div>
@@ -85,8 +85,8 @@
                             <tr>
                                 <th class="px-6 py-3 text-left">Date</th>
                                 <th class="px-6 py-3 text-left">Feed Type</th>
-                                <th class="px-6 py-3 text-right">Qty (kg)</th>
-                                <th class="px-6 py-3 text-right">Price/kg</th>
+                                <th class="px-6 py-3 text-right">Qty (Bag)</th>
+                                <th class="px-6 py-3 text-right">Price/Bag</th>
                                 <th class="px-6 py-3 text-right">Total Cost</th>
                                 <th class="px-6 py-3 text-left">Notes</th>
                                 <th class="px-6 py-3 text-center">Actions</th>
@@ -108,7 +108,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-right font-bold text-green-700">
-                                    {{ number_format($log->quantity_kg, 2) }}
+                                    {{ number_format($log->quantity_kg, 0) }}
                                 </td>
                                 <td class="px-6 py-4 text-right text-gray-500">
                                     ₦{{ number_format($log->price_per_kg, 2) }}
@@ -120,19 +120,46 @@
                                     <span class="truncate block">{{ $log->notes ?? '—' }}</span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <div class="flex items-center justify-center gap-3">
-                                        <a href="{{ route('feed-logs.edit', $log) }}"
-                                           class="text-blue-500 hover:text-blue-700 text-xs font-semibold hover:underline">
-                                            Edit
-                                        </a>
-                                        <form action="{{ route('feed-logs.destroy', $log) }}" method="POST"
-                                              onsubmit="return confirm('Delete this feed log entry?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit"
-                                                    class="text-red-400 hover:text-red-600 text-xs font-semibold hover:underline">
-                                                Delete
-                                            </button>
-                                        </form>
+                                    <div class="relative inline-block" x-data="{ open: false }">
+                                        <button @click="open = !open" @click.outside="open = false"
+                                                class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                <circle cx="12" cy="5" r="1.5"/>
+                                                <circle cx="12" cy="12" r="1.5"/>
+                                                <circle cx="12" cy="19" r="1.5"/>
+                                            </svg>
+                                        </button>
+
+                                        <div x-show="open"
+                                             x-transition:enter="transition ease-out duration-100"
+                                             x-transition:enter-start="opacity-0 scale-95"
+                                             x-transition:enter-end="opacity-100 scale-100"
+                                             x-transition:leave="transition ease-in duration-75"
+                                             x-transition:leave-start="opacity-100 scale-100"
+                                             x-transition:leave-end="opacity-0 scale-95"
+                                             class="absolute right-0 mt-1 w-36 bg-white rounded-xl shadow-lg border border-gray-100 z-10 overflow-hidden"
+                                             style="display: none;">
+                                            <a href="{{ route('feed-logs.edit', $log) }}"
+                                               class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                                <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                </svg>
+                                                Edit
+                                            </a>
+                                            <form action="{{ route('feed-logs.destroy', $log) }}" method="POST"
+                                                  onsubmit="return confirm('Delete this feed log entry?')">
+                                                @csrf @method('DELETE')
+                                                <button type="submit"
+                                                        class="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                    </svg>
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -143,7 +170,7 @@
                             <tr>
                                 <td colspan="2" class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Page Total</td>
                                 <td class="px-6 py-3 text-right font-bold text-green-700">
-                                    {{ number_format($logs->sum('quantity_kg'), 2) }} kg
+                                    {{ number_format($logs->sum('quantity_kg'), 0) }} Bag
                                 </td>
                                 <td class="px-6 py-3"></td>
                                 <td class="px-6 py-3 text-right font-bold text-purple-700">

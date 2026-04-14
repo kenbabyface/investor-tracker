@@ -57,7 +57,7 @@
                         @foreach($feedSizes as $fs)
                             <option value="{{ $fs->id }}"
                                 {{ old('feed_size_id', $feedLog->feed_size_id) == $fs->id ? 'selected' : '' }}>
-                                {{ $fs->name }} {{ $fs->size ? "({$fs->size})" : '' }} — ₦{{ number_format($fs->price_per_kg, 2) }}/kg
+                                {{ $fs->name }} {{ $fs->size ? "({$fs->size})" : '' }} — ₦{{ number_format($fs->price_per_kg, 2) }}/bag
                             </option>
                         @endforeach
                     </select>
@@ -80,15 +80,15 @@
                                max="{{ today()->format('Y-m-d') }}" required
                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    <div>
+                   <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">
-                            Quantity (kg) <span class="text-red-500">*</span>
+                            Quantity (Bags) <span class="text-red-500">*</span>
                         </label>
                         <input type="number" name="quantity_kg" id="quantity_kg"
-                               value="{{ old('quantity_kg', $feedLog->quantity_kg) }}"
-                               min="0.01" step="0.01" required
-                               oninput="updateCalc()"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            value="{{ old('quantity_kg',(int) $feedLog->quantity_kg) }}"
+                            min="1" step="1" required
+                            oninput="updateCalc()"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
 
@@ -99,13 +99,13 @@
                         <div class="bg-white rounded-xl px-4 py-3 shadow-sm flex-1">
                             <p class="text-xs text-gray-400 mb-1">Quantity</p>
                             <p class="text-xl font-bold text-blue-700">
-                                <span id="calcQty">{{ number_format($feedLog->quantity_kg, 2) }}</span>
-                                <span class="text-sm font-normal text-gray-400">kg</span>
+                                <span id="calcQty">{{ number_format($feedLog->quantity_kg, 0) }}</span>
+                                <span class="text-sm font-normal text-gray-400">bag</span>
                             </p>
                         </div>
                         <div class="text-2xl text-gray-300 font-light">×</div>
                         <div class="bg-white rounded-xl px-4 py-3 shadow-sm flex-1">
-                            <p class="text-xs text-gray-400 mb-1">Price / kg</p>
+                            <p class="text-xs text-gray-400 mb-1">Price / Bag</p>
                             <p class="text-xl font-bold text-gray-700">₦<span id="calcPrice">{{ number_format($feedLog->price_per_kg, 2) }}</span></p>
                         </div>
                         <div class="text-2xl text-gray-300 font-light">=</div>
@@ -149,7 +149,7 @@
             const price = feedPrices[fsId];
             const total = qty * price;
 
-            document.getElementById('calcQty').textContent   = qty.toFixed(2);
+            document.getElementById('calcQty').textContent   = qty.toFixed(0);
             document.getElementById('calcPrice').textContent = price.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             document.getElementById('calcTotal').textContent = total.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
