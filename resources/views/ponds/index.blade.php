@@ -177,7 +177,7 @@
                              <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-3 text-center col-span-2 border border-purple-200 group-hover:border-purple-300 transition-colors relative overflow-hidden">
                                 <div class="absolute top-0 right-0 w-16 h-16 bg-purple-200 rounded-full -mr-8 -mt-8 opacity-20"></div>
                                 <p class="text-xs text-purple-600 font-bold uppercase tracking-wide mb-1 relative z-10">Total KG</p>
-                                <p class="text-2xl font-black text-purple-700 relative z-10">{{ number_format($pond->feed_logs_sum_quantity_kg?? 0, 2) }}</p>
+                                <p class="text-2xl font-black text-purple-700 relative z-10">{{ number_format($pond->total_kg, 0) }}</p>
                             </div>
                         </div>
 

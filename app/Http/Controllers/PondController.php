@@ -13,7 +13,10 @@ class PondController extends Controller
             ->withSum('feedLogs', 'quantity_kg')
             ->withSum('feedLogs', 'total_cost')
             ->latest()
-            ->get();
+            ->get()
+            ->each(function ($pond) {
+                $pond->total_kg = ($pond->feed_logs_sum_quantity_kg ?? 0) * 15;
+            });
 
         return view('ponds.index', compact('ponds'));
     }
