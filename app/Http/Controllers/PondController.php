@@ -87,17 +87,23 @@ class PondController extends Controller
             ->with('success', "Pond '{$pond->name}' updated successfully.");
     }
 
-        public function archive(Pond $pond)
+    public function archive(Pond $pond)
     {
+        // Prevent archiving ponds with no data
+        if (!$pond->stock_count && !$pond->species && !$pond->feedLogs()->exists()) {
+            return redirect()->route('ponds.index')
+                ->with('error', "Cannot archive \"{$pond->name}\" — pond has no stock or feed data.");
+        }
+
         PondHistory::create([
-            'pond_id'        => $pond->id,
-            'pond_name'      => $pond->name,
-            'species'        => $pond->species,
-            'stock_count'    => $pond->stock_count,
-            'stocked_at'     => $pond->stocked_at,
-            'total_feed_bags'=> $pond->feedLogs()->sum('quantity_kg'),
-            'total_feed_kg'  => $pond->feedLogs()->sum('quantity_kg') * 15,
-            'total_cost'     => $pond->feedLogs()->sum('total_cost'),
+            'pond_id'         => $pond->id,
+            'pond_name'       => $pond->name,
+            'species'         => $pond->species,
+            'stock_count'     => $pond->stock_count,
+            'stocked_at'      => $pond->stocked_at,
+            'total_feed_bags' => $pond->feedLogs()->sum('quantity_kg'),
+            'total_feed_kg'   => $pond->feedLogs()->sum('quantity_kg') * 15,
+            'total_cost'      => $pond->feedLogs()->sum('total_cost'),
         ]);
 
         $pond->feedLogs()->delete();
@@ -107,7 +113,8 @@ class PondController extends Controller
             'stocked_at'  => null,
         ]);
 
-        return redirect()->route('ponds.index')->with('success', "Cycle archived for \"{$pond->name}\". Pond is ready for new stock.");
+        return redirect()->route('ponds.index')
+            ->with('success', "Cycle archived for \"{$pond->name}\". Pond is ready for new stock.");
     }
 
         public function history()
