@@ -5,6 +5,8 @@
             <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
                 Pond Management
             </h2>
+
+           
             <a href="{{ route('ponds.create') }}"
                class="group inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg shadow-blue-500/30 transition-all duration-300 hover:scale-105 hover:shadow-xl">
                 <svg class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,14 +17,23 @@
         </div>
     </x-slot>
 
-    <div class="p-6 space-y-5 max-w-7l mx-auto">
+    <div class="p-6 space-y-5 w-full mx-auto">
 
-       
+        {{-- Hero Banner --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-200 shadow-sm">
             <div>
                 <h3 class="text-lg font-bold text-gray-800">Manage Your Ponds</h3>
                 <p class="text-sm text-gray-600 mt-1">Create ponds to track feed consumption and monitor your aquaculture operations.</p>
             </div>
+
+             <a href="{{ route('ponds.history') }}"
+            class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200"
+            style="background-color: #f59e0b !important; color: #ffffff !important;">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                View History
+            </a>
             <a href="{{ route('ponds.create') }}"
                class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-blue-500/30 transition-all duration-300 hover:scale-105 hover:shadow-xl whitespace-nowrap">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +43,7 @@
             </a>
         </div>
 
-      
+        {{-- Stats Cards --}}
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="relative overflow-hidden bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500 hover:shadow-xl transition-shadow duration-300 group">
                 <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-100 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
@@ -89,7 +100,7 @@
                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-                <input type="text" id="pondSearch" placeholder="Search ponds by name or species..." 
+                <input type="text" id="pondSearch" placeholder="Search ponds by name or species..."
                        class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none">
             </div>
             <div class="flex gap-2">
@@ -110,8 +121,6 @@
                 </div>
                 <h3 class="text-2xl font-bold text-gray-800 mb-3">No ponds found</h3>
                 <p class="text-gray-500 mb-8 max-w-md mx-auto">Start your aquaculture journey by creating your first pond.</p>
-                
-                {{-- BIG VISIBLE BUTTON IN EMPTY STATE --}}
                 <a href="{{ route('ponds.create') }}"
                    class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold px-10 py-5 rounded-2xl shadow-lg shadow-blue-500/30 transition-all duration-300 hover:scale-105 hover:shadow-xl text-lg">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,13 +132,17 @@
         @else
             <div id="pondsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 @foreach($ponds as $pond)
-                <div class="pond-card group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col overflow-hidden transform hover:-translate-y-1" 
-                     data-name="{{ strtolower($pond->name) }}" 
+                {{-- 
+                    FIX: Removed fixed height h-[420px], using items-stretch on grid 
+                    and flex flex-col on card to allow natural height expansion
+                --}}
+                <div class="pond-card group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col"
+                     data-name="{{ strtolower($pond->name) }}"
                      data-species="{{ strtolower($pond->species ?? '') }}"
                      data-status="{{ $pond->is_active ? 'active' : 'inactive' }}">
-                    
-                    {{-- Card Header with Gradient --}}
-                    <div class="relative h-24 bg-gradient-to-r from-blue-500 to-cyan-400 overflow-hidden">
+
+                    {{-- Card Header with Gradient — overflow-hidden scoped here only --}}
+                   <div class="relative h-24 overflow-hidden rounded-t-2xl flex-shrink-0" style="background: linear-gradient(to right, #3b82f6, #22d3ee);">
                         <div class="absolute inset-0 bg-black opacity-10"></div>
                         <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-white opacity-10 rounded-full"></div>
                         <div class="absolute top-4 left-4 flex items-center gap-3">
@@ -156,7 +169,8 @@
                         </div>
                     </div>
 
-                    <div class="p-5 flex-1">
+                    {{-- Card Body --}}
+                    <div class="p-5 flex-1 flex flex-col">
                         {{-- Stats Grid --}}
                         <div class="grid grid-cols-2 gap-3 mb-4">
                             <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3 text-center border border-blue-200 group-hover:border-blue-300 transition-colors">
@@ -174,7 +188,7 @@
                                 <p class="text-xs text-purple-600 font-bold uppercase tracking-wide mb-1 relative z-10">Total Investment</p>
                                 <p class="text-2xl font-black text-purple-700 relative z-10">₦{{ number_format($pond->feed_logs_sum_total_cost ?? 0, 2) }}</p>
                             </div>
-                             <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-3 text-center col-span-2 border border-purple-200 group-hover:border-purple-300 transition-colors relative overflow-hidden">
+                            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-3 text-center col-span-2 border border-purple-200 group-hover:border-purple-300 transition-colors relative overflow-hidden">
                                 <div class="absolute top-0 right-0 w-16 h-16 bg-purple-200 rounded-full -mr-8 -mt-8 opacity-20"></div>
                                 <p class="text-xs text-purple-600 font-bold uppercase tracking-wide mb-1 relative z-10">Total KG</p>
                                 <p class="text-2xl font-black text-purple-700 relative z-10">{{ number_format($pond->total_kg, 0) }}</p>
@@ -182,7 +196,7 @@
                         </div>
 
                         {{-- Meta Info --}}
-                        <div class="flex items-center justify-between text-xs text-gray-500 border-t border-gray-100 pt-3">
+                        <div class="flex items-center justify-between text-xs text-gray-500 border-t border-gray-100 pt-3 mt-auto">
                             <div class="flex items-center gap-1">
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -193,8 +207,8 @@
                                     <span>Not stocked yet</span>
                                 @endif
                             </div>
-                            <a href="{{ route('ponds.edit', $pond) }}" 
-                               class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200" 
+                            <a href="{{ route('ponds.edit', $pond) }}"
+                               class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
                                title="Edit Pond">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -203,23 +217,36 @@
                         </div>
                     </div>
 
-                    {{-- Action Buttons --}}
-                    <div class="px-5 pb-5 flex gap-3">
-                        <a href="{{ route('ponds.show', $pond) }}"
-                           class="flex-1 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white text-sm font-bold py-3 rounded-xl transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02]">
+                   {{-- Action Buttons --}}
+                    <div class="px-5 pb-5 pt-2 space-y-2 flex-shrink-0">
+                        <div class="flex gap-2">
+                            <a href="{{ route('ponds.show', $pond) }}"
+                            style="background-color: #1f2937 !important; color: #ffffff !important;"
+                            class="flex-1 flex items-center justify-center gap-2 text-sm font-bold py-3 rounded-xl transition-all duration-200 hover:opacity-90">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                View
+                            </a>
+                            <a href="{{ route('feed-logs.create') }}?pond_id={{ $pond->id }}"
+                            style="background-color: #22c55e !important; color: #ffffff !important;"
+                            class="flex-1 flex items-center justify-center gap-2 text-sm font-bold py-3 rounded-xl transition-all duration-200 hover:opacity-90">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                Log Feed
+                            </a>
+                        </div>
+                        <button type="button"
+                                onclick="openArchiveModal({{ $pond->id }}, '{{ addslashes($pond->name) }}')"
+                                style="background-color: #f97316 !important; color: #ffffff !important;"
+                                class="w-full flex items-center justify-center gap-2 text-sm font-bold py-2.5 rounded-xl transition-all duration-200 hover:opacity-90">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8M10 12v4m4-4v4"/>
                             </svg>
-                            View Details
-                        </a>
-                        <a href="{{ route('feed-logs.create') }}?pond_id={{ $pond->id }}"
-                           class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-sm font-bold py-3 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-green-500/30 transform hover:scale-[1.02]">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
-                            Log Feed
-                        </a>
+                            Archive Cycle
+                        </button>
                     </div>
                 </div>
                 @endforeach
@@ -227,51 +254,98 @@
         @endif
     </div>
 
-    {{-- FLOATING ACTION BUTTON (Mobile) - Always visible --}}
-    <a href="{{ route('ponds.create') }}" 
+    {{-- FLOATING ACTION BUTTON (Mobile) --}}
+    <a href="{{ route('ponds.create') }}"
        class="fixed bottom-6 right-6 md:hidden z-50 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg shadow-blue-500/40 flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
     </a>
 
-    @push('scripts')
-    <script>
-        // Search functionality
-        document.getElementById('pondSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.pond-card');
-            
-            cards.forEach(card => {
-                const name = card.getAttribute('data-name');
-                const species = card.getAttribute('data-species');
-                
-                if (name.includes(searchTerm) || species.includes(searchTerm)) {
-                    card.style.display = 'flex';
-                    card.classList.add('animate-fade-in');
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
+    {{-- Archive Confirmation Modal --}}
+    <div id="archiveModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        {{-- Backdrop --}}
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeArchiveModal()"></div>
 
-        // Status filter
-        document.getElementById('statusFilter').addEventListener('change', function(e) {
-            const filter = e.target.value;
-            const cards = document.querySelectorAll('.pond-card');
-            
-            cards.forEach(card => {
-                const status = card.getAttribute('data-status');
-                
-                if (filter === 'all' || status === filter) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+        {{-- Modal Box --}}
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 transform transition-all">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Archive Pond Cycle?</h3>
+                    <p class="text-sm text-gray-500">This action cannot be undone.</p>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-sm text-amber-800 space-y-1">
+                <p class="font-semibold">Archiving "<span id="modalPondName"></span>" will:</p>
+                <ul class="list-disc list-inside space-y-1 mt-2 text-amber-700">
+                    <li>Save all feed log data to history</li>
+                    <li>Delete all current feed logs for this pond</li>
+                    <li>Reset stock count, species & stocked date</li>
+                    <li>Leave the pond ready for a new stock cycle</li>
+                </ul>
+            </div>
+
+            <form id="archiveForm" method="POST">
+                @csrf
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeArchiveModal()"
+                            class="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="flex-1 py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-grey-700 font-bold rounded-xl transition shadow-lg shadow-amber-500/30">
+                        Yes, Archive It
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+  <script>
+    function applyFilters() {
+        const searchTerm = document.getElementById('pondSearch').value.toLowerCase();
+        const filter = document.getElementById('statusFilter').value;
+        const cards = document.querySelectorAll('.pond-card');
+
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name');
+            const species = card.getAttribute('data-species');
+            const status = card.getAttribute('data-status');
+
+            const matchesSearch = name.includes(searchTerm) || species.includes(searchTerm);
+            const matchesStatus = filter === 'all' || status === filter;
+
+            card.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
         });
-    </script>
-    @endpush
+    }
+
+    document.getElementById('pondSearch').addEventListener('input', applyFilters);
+    document.getElementById('statusFilter').addEventListener('change', applyFilters);
+
+    function openArchiveModal(pondId, pondName) {
+        document.getElementById('modalPondName').textContent = pondName;
+        document.getElementById('archiveForm').action = `/ponds/${pondId}/archive`;
+        const modal = document.getElementById('archiveModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeArchiveModal() {
+        const modal = document.getElementById('archiveModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeArchiveModal();
+    });
+</script>
 
     @push('styles')
     <style>

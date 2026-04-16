@@ -78,7 +78,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment-schedule', [PaymentScheduleController::class, 'index'])->name('payments.schedule');
 
     // --- Ponds Management ---
+    Route::get('/ponds/history', [PondController::class, 'history'])->name('ponds.history'); 
     Route::resource('ponds', PondController::class);
+    Route::post('ponds/{pond}/archive', [PondController::class, 'archive'])->name('ponds.archive');
     
     // --- Feed Sizes / Settings ---
     Route::prefix('feed-sizes')->name('feed-sizes.')->group(function () {
