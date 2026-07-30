@@ -39,11 +39,9 @@ class InvestmentController extends Controller
 
         if ($validated['investment_type'] === 'double_cycle') {
 
-            $validated['roi_date'] = Carbon::parse($validated['investment_date'])->addMonths(12);
-        } else {
-            $validated['roi_date'] = Carbon::parse($validated['investment_date'])->addMonths(6);
-        }
-
+           $validated['roi_date'] = Carbon::parse($validated['investment_date'])->addMonths(6);
+        } 
+        
         $validated['roi_amount'] = Investment::calculateRoiAmount($validated['investment_amount']);
         $validated['cycle_number'] = 1;
         $validated['roi_status'] = 'pending';
