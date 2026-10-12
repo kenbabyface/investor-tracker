@@ -27,7 +27,7 @@
                     <form method="POST" action="{{ route('investments.store') }}">
                         @csrf
 
-                        <!-- Investor Selection -->
+                         <!-- Investor Selection -->
                         <div class="mb-6">
                             <label for="investor_id" class="block text-sm font-medium text-gray-700 mb-2">
                                 Investor <span class="text-red-500">*</span>
@@ -36,7 +36,9 @@
                                     class="block w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">Select Investor</option>
                                 @foreach($investors as $investor)
-                                    <option value="{{ $investor->id }}" {{ old('investor_id') == $investor->id ? 'selected' : '' }}>
+                                    <option value="{{ $investor->id }}"
+                                            data-amount="{{ $investor->investment_amount }}"
+                                            {{ old('investor_id') == $investor->id ? 'selected' : '' }}>
                                         {{ $investor->name }} ({{ $investor->email }})
                                     </option>
                                 @endforeach
@@ -53,9 +55,9 @@
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500">$</span>
+                                    <span class="text-gray-500">₦</span>
                                 </div>
-                                <input type="number" name="investment_amount" id="investment_amount" 
+                                <input type="number" name="investment_amount" id="investment_amount"
                                        value="{{ old('investment_amount') }}"
                                        step="0.01" min="0" required
                                        class="block w-full pl-8 border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -64,8 +66,10 @@
                             @error('investment_amount')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
+                            <p id="balance-hint" class="mt-1 text-sm text-blue-600 font-medium"></p>
                             <p class="mt-1 text-sm text-gray-500">ROI will be calculated automatically (20%)</p>
                         </div>
+
 
                         <!-- Investment Date -->
                         <div class="mb-6">
@@ -157,4 +161,41 @@
             </div>
         </div>
     </div>
+
+     <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const investorSelect = document.getElementById('investor_id');
+        const amountInput    = document.getElementById('investment_amount');
+        const hint           = document.getElementById('balance-hint');
+
+        function syncAmount(overwrite) {
+            const opt = investorSelect.options[investorSelect.selectedIndex];
+            const balance = opt ? opt.dataset.amount : null;
+
+            if (!balance) {
+                amountInput.value = '';
+                amountInput.removeAttribute('max');
+                hint.textContent = '';
+                return;
+            }
+
+            amountInput.max = balance;
+            hint.textContent = 'Available balance: ₦' + Number(balance).toLocaleString('en-NG', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            if (overwrite) {
+                amountInput.value = balance;
+            }
+        }
+
+        investorSelect.addEventListener('change', () => syncAmount(true));
+
+        // After a validation error, keep what the user typed
+        if (investorSelect.value) {
+            syncAmount(false);
+        }
+    });
+    </script>
 </x-app-layout>
