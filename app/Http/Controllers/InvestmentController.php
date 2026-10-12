@@ -10,6 +10,9 @@ use Carbon\Carbon;
 use App\Exports\InvestmentsExport;
 use App\Exports\InvestmentHistoryExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
+
 
 class InvestmentController extends Controller
 {
@@ -28,27 +31,40 @@ class InvestmentController extends Controller
         return view('investments.create', compact('investors'));
     }
 
-        public function store(Request $request)
+     public function store(Request $request)
     {
         $validated = $request->validate([
-            'investor_id' => 'required|exists:investors,id',
+            'investor_id'       => 'required|exists:investors,id',
             'investment_amount' => 'required|numeric|min:0',
-            'investment_date' => 'required|date',
-            'investment_type' => 'required|in:single_cycle,double_cycle',
+            'investment_date'   => 'required|date',
+            'investment_type'   => 'required|in:single_cycle,double_cycle',
         ]);
 
-        if ($validated['investment_type'] === 'double_cycle') {
+        DB::transaction(function () use ($validated) {
+            $investor = Investor::lockForUpdate()->findOrFail($validated['investor_id']);
 
-           $validated['roi_date'] = Carbon::parse($validated['investment_date'])->addMonths(6);
-        } 
-        
-        $validated['roi_amount'] = Investment::calculateRoiAmount($validated['investment_amount']);
-        $validated['cycle_number'] = 1;
-        $validated['roi_status'] = 'pending';
+            if ($validated['investment_amount'] > $investor->investment_amount) {
+                throw ValidationException::withMessages([
+                    'investment_amount' => 'Insufficient wallet balance (₦'
+                        . number_format($investor->investment_amount, 2) . ' available).',
+                ]);
+            }
 
-        Investment::create($validated);
+            if ($validated['investment_type'] === 'double_cycle') {
+                $validated['roi_date'] = Carbon::parse($validated['investment_date'])->addMonths(6);
+            }
 
-        return redirect()->route('investments.index')->with('success', 'Investment added successfully!');
+            $validated['roi_amount']   = Investment::calculateRoiAmount($validated['investment_amount']);
+            $validated['cycle_number'] = 1;
+            $validated['roi_status']   = 'pending';
+
+            Investment::create($validated);
+
+            $investor->decrement('investment_amount', $validated['investment_amount']);
+        });
+
+        return redirect()->route('investments.index')
+            ->with('success', 'Investment added successfully!');
     }
 
     public function show(Investment $investment)
